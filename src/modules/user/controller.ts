@@ -68,7 +68,27 @@ export const UserController = {
       }
       return res.json(result);
     })
-  }
+  },
+  loginwithgoogle:(req:Request,res:Response,next:NextFunction)=>{
+    console.log('came googlelogin', req.body);
+    UserClient.LoginwithGoogle(req.body, (err: Error | null, result: any) => {
+      if (err) {
+        console.error("Error: ", err);
+        return res.status(500).json({ error: 'Internal Server Error' }); 
+      }
+      console.log("Response from UserClient:", result);
+      if(result.success){
+    if (!process.env.SECRET_KEY) {
+      throw new Error('Secret key is not defined in environment variables');
+    }
+    const {username,email}=result.user
+    const token=jwt.sign({username,email},process.env.SECRET_KEY,{ expiresIn: '1h' })
+    console.log('token',token);
+    res.cookie('token',token,{httpOnly:true});
+      }
+      return res.json(result);
+    })
+  },
   
   
 };

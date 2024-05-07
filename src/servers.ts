@@ -3,7 +3,7 @@ import express, { Request, Response, Express } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import userRoute from "./modules/user/routes";
-
+import recruiterRoute from "./modules/recruiter/routes";
 dotenv.config();
 
 const app: Express = express();
@@ -18,6 +18,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/", userRoute);
+app.use("/recruiter",recruiterRoute)
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

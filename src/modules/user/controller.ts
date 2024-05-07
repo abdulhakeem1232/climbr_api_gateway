@@ -13,6 +13,8 @@ export const UserController = {
         return res.status(500).json({ error: 'Internal Server Error' }); 
       }
       console.log("Response from UserClient:", result);
+      const isRecruiter = false;
+          res.cookie('isRecruiter', isRecruiter);
       res.cookie('otp',result.otp, { httpOnly: true })
       if (typeof result.data === 'object' || Array.isArray(result.data)) {
         res.cookie('userdata', JSON.stringify(result.data), { httpOnly: true });
@@ -36,19 +38,22 @@ export const UserController = {
         return res.status(500).json({ error: 'Internal Server Error' }); 
       }
       console.log("Response from UserClient:", result);
-      const {username,email}=userdataFromCookie;
+      const {email}=userdataFromCookie;
       if (!process.env.SECRET_KEY) {
         throw new Error('Secret key is not defined in environment variables');
       }
-      const token=jwt.sign({username,email},process.env.SECRET_KEY,{ expiresIn: '1h' })
+      const token=jwt.sign({email},process.env.SECRET_KEY,{ expiresIn: '1h' })
       console.log('token',token);
       res.clearCookie('otp');
       res.cookie('token',token,{httpOnly:true})
+      let role='user'
+      res.cookie('role',role,{httpOnly:true})
+
       res.json(result); 
     });
   },
   login:(req:Request,res:Response,next:NextFunction)=>{
-    console.log('came otp', req.body);
+    console.log('came login', req.body);
     UserClient.Login(req.body, (err: Error | null, result: any) => {
       if (err) {
         console.error("Error:", err);
@@ -56,12 +61,12 @@ export const UserController = {
       }
       console.log("Response from UserClient:", result);
       if(result.success){
-    const userdataFromCookie = JSON.parse(req.cookies.userdata);
-    const {username,email}=userdataFromCookie;
+    const user = result.user
+    const {email}=req.body.email
     if (!process.env.SECRET_KEY) {
       throw new Error('Secret key is not defined in environment variables');
     }
-    const token=jwt.sign({username,email},process.env.SECRET_KEY,{ expiresIn: '1h' })
+    const token=jwt.sign({email},process.env.SECRET_KEY,{ expiresIn: '1h' })
     console.log('token',token);
     res.clearCookie('userdata');
     res.cookie('token',token,{httpOnly:true});

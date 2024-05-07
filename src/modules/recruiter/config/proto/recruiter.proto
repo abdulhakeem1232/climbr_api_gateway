@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+service RecuiterServices {
+    rpc Register(UserData) returns (RegistrationResponse){};
+    rpc OtpVerify(OtpVerifyRequest) returns (OtpVerifyResponse){};
+    rpc Login(LoginRequest) returns (LoginResponse){};
+}
+
+message UserData {
+    string username = 1;
+    string email = 2;
+    int32 mobile = 3;
+    string password = 4;
+    string companyEmail = 5;
+    string companyName = 6;
+}
+
+message RegistrationResponse {
+    bool success = 1;
+    UserData data = 2;
+    string msg = 3;
+    string otp = 4 ;
+}
+
+message OtpVerifyRequest {
+   UserData userdata = 1;
+   string otp = 2;
+   string enterOtp = 3;
+}
+
+message OtpVerifyResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+message LoginRequest {
+    string email = 1;
+    string password = 2;
+}
+
+message LoginResponse {
+    bool success = 1;
+    UserData user = 2;
+}
+
+message GoogleLoginRequest {
+  string credential = 1;
+}
+
+message GoogleLoginResponse {
+  bool success = 1;
+  User user = 2;
+}
+
+message User {
+  string id = 1;
+  string email = 2;
+  string name = 3;
+}

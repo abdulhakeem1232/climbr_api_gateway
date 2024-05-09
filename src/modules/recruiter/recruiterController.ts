@@ -75,4 +75,38 @@ export const recruiterController={
           return res.json(result);
         })
       },
+      getall:(req:Request,res:Response,next:NextFunction)=>{
+        console.log('came getall recruiter');
+        RecruiterClient.Getall(req.body, (err: Error | null, result: any) => {
+          if (err) {
+            console.error("Error: ", err);
+            return res.status(500).json({ error: 'Internal Server Error' }); 
+          }
+          console.log("Response from UserClient:", result);
+          return res.json(result);
+        })
+      },
+      updateStatus:(req:Request,res:Response,next:NextFunction)=>{
+        console.log('came getallreee');
+        RecruiterClient.UpdateStatus(req.body, (err: Error | null, result: any) => {
+          if (err) {
+            console.error("Error: ", err);
+            return res.status(500).json({ error: 'Internal Server Error' }); 
+          }
+          console.log("Response from UserClient:", result);
+          return res.json(result);
+        })
+      },
+      updateApproval:(req:Request,res:Response,next:NextFunction)=>{
+        console.log('came getallreee');
+        RecruiterClient.Approval(req.body, (err: Error | null, result: any) => {
+          if (err) {
+            console.error("Error: ", err);
+            return res.status(500).json({ error: 'Internal Server Error' }); 
+          }
+          console.log("Response from UserClient:", result);
+          return res.json(result);
+        })
+      },
+    
 }

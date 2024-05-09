@@ -4,15 +4,24 @@ service RecuiterServices {
     rpc Register(UserData) returns (RegistrationResponse){};
     rpc OtpVerify(OtpVerifyRequest) returns (OtpVerifyResponse){};
     rpc Login(LoginRequest) returns (LoginResponse){};
+    rpc Getall(Empty) returns (GetAllUsersResponse){};
+    rpc UpdateStatus(UserData) returns (GetAllUsersResponse){};
+    rpc Approval(UserData) returns (GetAllUsersResponse){};
+}
+
+message Empty {
+
 }
 
 message UserData {
     string username = 1;
     string email = 2;
-    int32 mobile = 3;
+    string mobile = 3;
     string password = 4;
-    string companyEmail = 5;
+    string companyemail = 5;
     string companyName = 6;
+    bool isActive = 7;
+    bool status = 8;
 }
 
 message RegistrationResponse {
@@ -56,4 +65,8 @@ message User {
   string id = 1;
   string email = 2;
   string name = 3;
+}
+
+message GetAllUsersResponse {
+    repeated UserData users = 1;
 }

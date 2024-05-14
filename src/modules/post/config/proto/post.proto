@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+service PostServices {
+   rpc CreatePost(PostRequest) returns (PostResponse){};
+   rpc GetAllPost(Empty) returns (GetPostResponse){};
+}
+
+message Empty {
+
+}
+
+message FileDetails {
+  string originalname = 1;
+  string encoding = 2;
+  string mimetype = 3;
+  bytes buffer = 4; 
+  int64 size = 5;
+}
+
+message PostRequest {
+  string userId = 1;
+  string description = 2;
+  FileDetails image = 3;
+}
+
+message PostResponse {
+    bool success = 1;
+}
+
+message Comment {
+    string userId = 1;
+    string content = 2;
+    string createdAt = 3;
+}
+
+message Like {
+    string userId = 1;
+    string createdAt = 2;
+}
+
+message PostDetails {
+  string _id = 1;
+  string userId = 2;
+  string image = 3;
+  string description = 4;
+  repeated Comment comments = 5;
+  repeated Like likes = 6;
+  string createdAt = 7;
+}
+
+message GetPostResponse {
+  repeated PostDetails posts = 1;
+}

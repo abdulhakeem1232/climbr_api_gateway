@@ -11,6 +11,7 @@
     recruiterRoute.get('/getallrecruiter',recruiterController.getall)
     recruiterRoute.put('/updateStatus',recruiterController.updateStatus)
     recruiterRoute.put('/approve',recruiterController.updateApproval)
+    
 
 
 

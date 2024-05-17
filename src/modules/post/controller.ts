@@ -48,13 +48,49 @@ export const PostController = {
         });
     },
     getallpost: (req: Request, res: Response, next: NextFunction) => {
-        PostClient.GetAllPost({}, (err: Error | null, result: any) => {
+        const { page = 1, limit = 10 } = req.query;
+        console.log('-0-0-0-0-0', page, limit);
+
+        PostClient.GetAllPost({ page: page, limit: limit }, async (err: Error | null, result: any) => {
             if (err) {
                 console.error("Error: ", err);
                 return res.status(500).json({ error: 'Internal Server Error' });
             }
-            console.log("Response from postclient for creating post:", result);
-            return res.json(result);
+            console.log("Response from postclient for retrive post:", result);
+            if (!Array.isArray(result.posts) || result.posts.length === 0) {
+                console.log('No posts retrieved from GetAllPost RPC');
+                return res.json({ posts: [] });
+            }
+            const userIds = result.posts.map((post: any) => post.userId);
+            try {
+                const userData = await Promise.all(
+                    userIds.map((userId: string) => {
+                        return new Promise((resolve, reject) => {
+                            UserClient.GetUserData({ userId: userId }, (err: Error | null, user: any) => {
+                                if (err) {
+                                    console.error("Error fetching user data: ", err);
+                                    reject(err);
+                                } else {
+                                    resolve(user);
+                                }
+                            });
+                        });
+                    })
+                );
+
+                result.posts.forEach((post: any, index: number) => {
+                    post.userData = userData[index];
+                });
+
+                console.log("Response from postclient for getting all posts:", result);
+                console.log(result.posts[0].userData);
+
+
+                return res.json(result);
+            } catch (error) {
+                console.error("Error fetching user data: ", error);
+                return res.status(500).json({ error: 'Internal Server Error' });
+            }
         });
     },
 }

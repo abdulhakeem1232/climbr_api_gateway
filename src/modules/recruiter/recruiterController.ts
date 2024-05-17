@@ -45,8 +45,8 @@ export const recruiterController = {
       const token = jwt.sign({ username, email }, process.env.SECRET_KEY, { expiresIn: '1h' })
       console.log('token', token);
       res.clearCookie('otp');
-      res.cookie('token', token, { httpOnly: true })
-      let role = 'user'
+      res.cookie('token', token, {})
+      let role = 'recruiter'
       res.cookie('role', role,)
 
       res.json(result);
@@ -71,6 +71,8 @@ export const recruiterController = {
         console.log('token', token);
         res.clearCookie('userdata');
         res.cookie('token', token);
+        let role = 'recruiter'
+        res.cookie('role', role,)
       }
       return res.json(result);
     })

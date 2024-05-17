@@ -2,7 +2,7 @@ syntax = "proto3";
 
 service PostServices {
    rpc CreatePost(PostRequest) returns (PostResponse){};
-   rpc GetAllPost(Empty) returns (GetPostResponse){};
+   rpc GetAllPost(GetPostRequest) returns (GetPostResponse){};
 }
 
 message Empty {
@@ -50,4 +50,9 @@ message PostDetails {
 
 message GetPostResponse {
   repeated PostDetails posts = 1;
+}
+
+message GetPostRequest {
+  string limit = 1;
+  string page = 2;
 }

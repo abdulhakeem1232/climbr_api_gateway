@@ -39,7 +39,7 @@ export const UserController = {
           return res.status(500).json({ error: 'Internal Server Error' });
         }
         console.log("Response from UserClient:", result);
-        const user = result.user
+        const user = result.userdata
         console.log(user, 'user----');
         const { email } = userdataFromCookie;
         if (!process.env.SECRET_KEY) {
@@ -86,7 +86,9 @@ export const UserController = {
         const token = jwt.sign({ email: email, userId: user._id }, process.env.SECRET_KEY, { expiresIn: '1h' })
         console.log('token', token);
         res.clearCookie('userdata');
-        res.cookie('token', token, { httpOnly: true });
+        res.cookie('token', token, {});
+        let role = user.isAdmin ? 'admin' : 'user'
+        res.cookie('role', role, {})
       }
       return res.json(result);
     })
@@ -103,10 +105,10 @@ export const UserController = {
         if (!process.env.SECRET_KEY) {
           throw new Error('Secret key is not defined in environment variables');
         }
-        const { username, email } = result.user
-        const token = jwt.sign({ email: email }, process.env.SECRET_KEY, { expiresIn: '1h' })
+        const { id, email } = result.user
+        const token = jwt.sign({ email: email, userId: id }, process.env.SECRET_KEY, { expiresIn: '1h' })
         console.log('token', token);
-        res.cookie('token', token, { httpOnly: true });
+        res.cookie('token', token, {});
       }
       return res.json(result);
     })
@@ -178,6 +180,13 @@ export const UserController = {
       return res.json(result);
     })
   },
+  logout: (req: Request, res: Response, next: NextFunction) => {
+    res.clearCookie('token');
+    if (req.cookies.role) {
+      res.clearCookie('role');
+    }
+    res.status(200).json({ message: 'Logout successful' });
+  }
 
 
 

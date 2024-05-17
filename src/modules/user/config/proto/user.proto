@@ -8,9 +8,11 @@ service UserServices {
     rpc Getall(Empty) returns (GetAllUsersResponse){};
     rpc UpdateStatus(UserData) returns (GetAllUsersResponse){};
     rpc EmailValidate(Email) returns (EmailSuccess){};
-    rpc Passwordotp(passwordOtp) returns (passwordOtpResponse) {};
+    rpc Passwordotp(passwordOtp) returns (passwordOtpResponse){};
     rpc Passwordreset(resetPassword) returns (resetPasswordResponse){};
     rpc ResendOtp(Email) returns (EmailSuccess){};
+    rpc GetUserData(UserId) returns (UserData){};
+    
 }
 
 message Empty {
@@ -24,7 +26,7 @@ message UserData {
     string password = 4;
     bool isActive = 5;
     string _id = 6;
-    string image = 7;
+    string avatar = 7;
 }
 
 message RegistrationResponse {
@@ -105,3 +107,8 @@ message resetPassword {
 message resetPasswordResponse {
   bool success = 1;
 }
+
+message UserId {
+  string userId = 1;
+}
+

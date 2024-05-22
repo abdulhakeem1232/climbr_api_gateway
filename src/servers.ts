@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import userRoute from "./modules/user/routes";
 import recruiterRoute from "./modules/recruiter/routes";
 import postRoute from "./modules/post/routes";
+import jobRoute from "./modules/jobPost/routes";
 dotenv.config();
 
 const app: Express = express();
@@ -21,8 +22,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/", userRoute);
+app.use("/recruiter/job", jobRoute)
 app.use("/recruiter", recruiterRoute);
-app.use("/post", postRoute)
+app.use("/post", postRoute);
+app.use("/job", jobRoute);
 
 
 

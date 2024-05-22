@@ -22,6 +22,8 @@ message UserData {
     string companyName = 6;
     bool isActive = 7;
     bool status = 8;
+    string avatar = 9;
+    string _id = 10;
 }
 
 message RegistrationResponse {
@@ -40,6 +42,8 @@ message OtpVerifyRequest {
 message OtpVerifyResponse {
     bool success = 1;
     string message = 2;
+    UserData user = 3;
+
 }
 
 message LoginRequest {
@@ -52,22 +56,6 @@ message LoginResponse {
     UserData user = 2;
 }
 
-message GoogleLoginRequest {
-  string credential = 1;
-}
-
-message GoogleLoginResponse {
-  bool success = 1;
-  User user = 2;
-}
-
-message User {
-  string id = 1;
-  string email = 2;
-  string name = 3;
-}
-
 message GetAllUsersResponse {
     repeated UserData users = 1;
 }
-

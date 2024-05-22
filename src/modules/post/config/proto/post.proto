@@ -3,6 +3,9 @@ syntax = "proto3";
 service PostServices {
    rpc CreatePost(PostRequest) returns (PostResponse){};
    rpc GetAllPost(GetPostRequest) returns (GetPostResponse){};
+   rpc PostLike(LikePost) returns (PostResponse){};
+   rpc PostDisLike(LikePost) returns (PostResponse){};
+   rpc PostComment(CommentPost) returns (PostResponse){};
 }
 
 message Empty {
@@ -55,4 +58,15 @@ message GetPostResponse {
 message GetPostRequest {
   string limit = 1;
   string page = 2;
+}
+
+message LikePost {
+  string userId = 1;
+  string postId = 2;
+}
+
+message CommentPost {
+  string userId = 1;
+  string postId = 2;
+  string comment = 3;
 }

@@ -42,7 +42,7 @@ export const recruiterController = {
       if (!process.env.SECRET_KEY) {
         throw new Error('Secret key is not defined in environment variables');
       }
-      const token = jwt.sign({ username, email }, process.env.SECRET_KEY, { expiresIn: '1h' })
+      const token = jwt.sign({ username, email }, process.env.SECRET_KEY, { expiresIn: '3h' })
       console.log('token', token);
       res.clearCookie('otp');
       res.cookie('token', token, {})
@@ -67,7 +67,7 @@ export const recruiterController = {
         if (!process.env.SECRET_KEY) {
           throw new Error('Secret key is not defined in environment variables');
         }
-        const token = jwt.sign({ email }, process.env.SECRET_KEY, { expiresIn: '1h' })
+        const token = jwt.sign({ email }, process.env.SECRET_KEY, { expiresIn: '3h' })
         console.log('token', token);
         res.clearCookie('userdata');
         res.cookie('token', token);

@@ -12,7 +12,10 @@ const postRoute = express.Router();
 postRoute.use(express.json());
 
 postRoute.post('/createpost', authMiddleware, upload.single("image"), PostController.post);
-postRoute.get('/getall', authMiddleware, PostController.getallpost)
+postRoute.get('/getall', authMiddleware, PostController.getallpost);
+postRoute.post('/like', authMiddleware, PostController.like)
+postRoute.post('/dislike', authMiddleware, PostController.dislike);
+postRoute.post('/comment', authMiddleware, PostController.comment)
 
 
 

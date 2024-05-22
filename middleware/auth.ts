@@ -25,10 +25,6 @@ const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
 
         next();
     });
-    console.log('else');
-
-
-
 }
 
 export default authMiddleware

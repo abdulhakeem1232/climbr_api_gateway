@@ -42,12 +42,14 @@ export const recruiterController = {
       if (!process.env.SECRET_KEY) {
         throw new Error('Secret key is not defined in environment variables');
       }
-      const token = jwt.sign({ username, email }, process.env.SECRET_KEY, { expiresIn: '3h' })
+      const token = jwt.sign({ username, email }, process.env.SECRET_KEY, { expiresIn: '1h' })
+      const expirationDate = new Date();
+      expirationDate.setTime(expirationDate.getTime() + 60 * 60 * 1000);
       console.log('token', token);
       res.clearCookie('otp');
-      res.cookie('token', token, {})
+      res.cookie('token', token, { expires: expirationDate })
       let role = 'recruiter'
-      res.cookie('role', role,)
+      res.cookie('role', role, { expires: expirationDate })
 
       res.json(result);
     });
@@ -62,17 +64,19 @@ export const recruiterController = {
       console.log("Response from UserClient:", result);
 
       if (result.success) {
-
         const { email } = req.body.email;
         if (!process.env.SECRET_KEY) {
           throw new Error('Secret key is not defined in environment variables');
         }
-        const token = jwt.sign({ email }, process.env.SECRET_KEY, { expiresIn: '3h' })
+        const { _id } = result.user
+        const token = jwt.sign({ email, userId: _id }, process.env.SECRET_KEY, { expiresIn: '3h' })
         console.log('token', token);
         res.clearCookie('userdata');
-        res.cookie('token', token);
+        const expirationDate = new Date();
+        expirationDate.setTime(expirationDate.getTime() + 60 * 60 * 1000);
+        res.cookie('token', token, { expires: expirationDate });
         let role = 'recruiter'
-        res.cookie('role', role,)
+        res.cookie('role', role, { expires: expirationDate })
       }
       return res.json(result);
     })

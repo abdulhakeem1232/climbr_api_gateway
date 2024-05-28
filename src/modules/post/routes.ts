@@ -15,7 +15,8 @@ postRoute.post('/createpost', authMiddleware, upload.single("image"), PostContro
 postRoute.get('/getall', authMiddleware, PostController.getallpost);
 postRoute.post('/like', authMiddleware, PostController.like)
 postRoute.post('/dislike', authMiddleware, PostController.dislike);
-postRoute.post('/comment', authMiddleware, PostController.comment)
+postRoute.post('/comment', authMiddleware, PostController.comment);
+postRoute.delete('/deleteComment', authMiddleware, PostController.deletComment)
 
 
 

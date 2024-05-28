@@ -18,6 +18,7 @@ userRoute.post('/emailValidate', UserController.emailValidate)
 userRoute.post('/resetPassword', UserController.resetPassword)
 userRoute.post('/resendOtp', UserController.resendOtp)
 userRoute.get('/logout', UserController.logout)
+userRoute.get('/getStatus', UserController.getStatus)
 
 
 export default userRoute;

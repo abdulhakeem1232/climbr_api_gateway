@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import jwt, { VerifyErrors } from 'jsonwebtoken';
+import { UserClient } from "../src/modules/user/config/grpcClient/userClient";
+import { RecruiterClient } from "../src/modules/recruiter/config/grpcClient/recruiterClient";
 
 const secretKey = process.env.SECRET_KEY
 
@@ -21,9 +23,44 @@ const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
 
             return res.status(401).json({ message: 'Unauthorized: Invalid token' });
         }
-        console.log('next');
+        const userId = decoded.userId;
+        const role = req.cookies.role;
+        let userStatus
+        const handleResponse = (status: boolean) => {
+            if (status) {
+                console.log('User/Recruiter is active');
+                next();
+            } else {
+                console.log('User/Recruiter is inactive');
+                return res.status(401).json({ message: 'Unauthorized: User/Recruiter is inactive' });
+            }
+        };
+        if (role == 'user') {
+            UserClient.GetStatus({ userId }, (err: Error | null, result: any) => {
+                if (err) {
+                    console.error("Error: ", err);
+                    return res.status(500).json({ error: 'Internal Server Error' });
+                }
+                console.log("Response from userclient for auth:", result);
+                handleResponse(result.status);
 
-        next();
+            });
+
+        } else if (role == 'recruiter') {
+            console.log(userId, '0-0-0-0-0-');
+
+            RecruiterClient.GetStatus({ userId }, (err: Error | null, result: any) => {
+                if (err) {
+                    console.error("Error: ", err);
+                    return res.status(500).json({ error: 'Internal Server Error' });
+                }
+                console.log("Response from recruiterclient for auth:", result);
+                console.log(result.status, '-----');
+                handleResponse(result.status);
+
+            });
+        }
+
     });
 }
 

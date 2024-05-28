@@ -1,7 +1,7 @@
 import express, { Request, Response, NextFunction } from "express";
 import { UserClient } from "./config/grpcClient/userClient";
 import * as dotenv from 'dotenv';
-import jwt from 'jsonwebtoken';
+import jwt, { VerifyErrors } from 'jsonwebtoken';
 
 dotenv.config();
 export const UserController = {
@@ -13,6 +13,8 @@ export const UserController = {
       const isRecruiter = false;
       res.cookie('isRecruiter', isRecruiter);
       res.cookie('otp', result.otp, { httpOnly: true })
+      console.log(result.otp, 'otp');
+
       if (typeof result.data === 'object' || Array.isArray(result.data)) {
         res.cookie('userdata', JSON.stringify(result.data), { httpOnly: true });
       }
@@ -35,11 +37,13 @@ export const UserController = {
         if (!process.env.SECRET_KEY) {
           throw new Error('Secret key is not defined in environment variables');
         }
-        const token = jwt.sign({ email: email, userId: user._id }, process.env.SECRET_KEY, { expiresIn: '3h' })
+        const token = jwt.sign({ email: email, userId: user._id }, process.env.SECRET_KEY, { expiresIn: '1h' })
+        const expirationDate = new Date();
+        expirationDate.setTime(expirationDate.getTime() + 60 * 60 * 1000);
         res.clearCookie('otp');
-        res.cookie('token', token, {})
+        res.cookie('token', token, { expires: expirationDate })
         let role = 'user'
-        res.cookie('role', role, {})
+        res.cookie('role', role, { expires: expirationDate })
         res.json(result);
       });
     } else {
@@ -63,11 +67,13 @@ export const UserController = {
         if (!process.env.SECRET_KEY) {
           throw new Error('Secret key is not defined in environment variables');
         }
-        const token = jwt.sign({ email: email, userId: user._id }, process.env.SECRET_KEY, { expiresIn: '3h' })
+        const token = jwt.sign({ email: email, userId: user._id }, process.env.SECRET_KEY, { expiresIn: '2h' })
+        const expirationDate = new Date();
+        expirationDate.setTime(expirationDate.getTime() + 60 * 60 * 1000);
         res.clearCookie('userdata');
-        res.cookie('token', token, {});
+        res.cookie('token', token, { expires: expirationDate });
         let role = user.isAdmin ? 'admin' : 'user'
-        res.cookie('role', role, {})
+        res.cookie('role', role, { expires: expirationDate })
       }
       return res.json(result);
     })
@@ -82,8 +88,10 @@ export const UserController = {
           throw new Error('Secret key is not defined in environment variables');
         }
         const { id, email } = result.user
-        const token = jwt.sign({ email: email, userId: id }, process.env.SECRET_KEY, { expiresIn: '3h' })
-        res.cookie('token', token, {});
+        const token = jwt.sign({ email: email, userId: id }, process.env.SECRET_KEY, { expiresIn: '1h' })
+        const expirationDate = new Date();
+        expirationDate.setTime(expirationDate.getTime() + 60 * 60 * 1000);
+        res.cookie('token', token, { expires: expirationDate });
       }
       return res.json(result);
     })
@@ -158,7 +166,30 @@ export const UserController = {
       res.clearCookie('role');
     }
     res.status(200).json({ message: 'Logout successful' });
+  },
+  getStatus: (req: Request, res: Response, next: NextFunction) => {
+    const token = req.cookies.token;
+    if (!process.env.SECRET_KEY) {
+      throw new Error('Secret key is not defined in environment variables');
+    }
+    jwt.verify(token, process.env.SECRET_KEY, (err: any, decoded: any) => {
+      if (err) {
+        console.error("Error decoding token: ", err);
+        return res.status(401).json({ error: 'Unauthorized' });
+      }
+
+      const userId = decoded.userId;
+      UserClient.GetStatus({ userId }, (err: Error | null, result: any) => {
+        if (err) {
+          console.error("Error: ", err);
+          return res.status(500).json({ error: 'Internal Server Error' });
+        }
+        console.log("Response from userclient for auth in api gateway:", result);
+        return res.json(result);
+      });
+    });
   }
+
 
 
 };

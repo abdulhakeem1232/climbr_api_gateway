@@ -12,7 +12,8 @@ service UserServices {
     rpc Passwordreset(resetPassword) returns (resetPasswordResponse){};
     rpc ResendOtp(Email) returns (EmailSuccess){};
     rpc GetUserData(UserId) returns (UserData){};
-    
+    rpc UpdateJobStatus(UpdateJobStatusRequest) returns (UpdateJobStatusResponse){};
+    rpc GetStatus(statusRequest) returns (statusResponse){};
 }
 
 message Empty {
@@ -112,3 +113,20 @@ message UserId {
   string userId = 1;
 }
 
+message UpdateJobStatusRequest {
+  string userid = 1;
+  string jobid = 2;
+  string status = 3;
+}
+
+message UpdateJobStatusResponse {
+  bool success = 1;
+}
+
+message statusRequest {
+  string userId = 1;
+}
+
+message statusResponse {
+  bool status = 1;
+}

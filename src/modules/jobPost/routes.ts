@@ -14,6 +14,16 @@ jobRoute.use(express.json());
 jobRoute.post('/createjob', authMiddleware, upload.single("companylogo"), jobController.createJob);
 jobRoute.get('/getjob/:userId', authMiddleware, jobController.getJob);
 jobRoute.get('/getalljob/', authMiddleware, jobController.getallJob);
+jobRoute.get('/singlejob/:id', authMiddleware, jobController.getsingleJob);
+jobRoute.post('/applyjob', authMiddleware, upload.single("cv"), jobController.applyJob);
+jobRoute.delete('/deletejob', authMiddleware, jobController.deleteJob);
+jobRoute.post('/updatejob', authMiddleware, jobController.updatejob);
+jobRoute.post('/searchjob', authMiddleware, jobController.searchJob)
+
+
+
+
+
 
 
 

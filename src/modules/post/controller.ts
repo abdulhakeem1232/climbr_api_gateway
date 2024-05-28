@@ -49,29 +49,6 @@ export const PostController = {
             if (!Array.isArray(result.posts) || result.posts.length === 0) {
                 return res.json({ posts: [] });
             }
-            // const postUserIds: string[] = result.posts.map((post: any) => post.userId);
-            // const commentUserIds: string[] = result.posts.flatMap((post: any) => post.comments?.map((comment: any) => comment.userId) || []);
-            // const allUserIds = [...new Set([...postUserIds, ...commentUserIds])];
-            // try {
-            //     const userData = await Promise.all(
-            //         allUserIds.map((userId: string) => {
-            //             return new Promise((resolve, reject) => {
-            //                 UserClient.GetUserData({ userId: userId }, (err: Error | null, user: any) => {
-            //                     if (err) {
-            //                         reject(err);
-            //                     } else {
-            //                         resolve(user);
-            //                     }
-            //                 });
-            //             });
-            //         })
-            //     );
-            //     result.posts.forEach((post: any) => {
-            //         post.userData = userData.find((user: any) => user._id === post.userId);
-            //         post.comments.forEach((comment: any) => {
-            //             comment.userData = userData.find((user: any) => user._id === comment.userId);
-            //         });
-            //     });
             console.log(result, '000000')
             const userIds = result.posts.map((post: any) => post.userId);
             const commentIds = result.posts.flatMap((post: any) =>
@@ -140,6 +117,19 @@ export const PostController = {
         console.log('comment--', req.body);
         const { userId, postId, comment } = req.body
         PostClient.PostComment({ userId, postId, comment }, (err: Error | null, result: any) => {
+            if (err) {
+                console.error("Error: ", err);
+                return res.status(500).json({ error: 'Internal Server Error' });
+            }
+            console.log("Response from postclient for comment post:", result);
+            return res.json(result);
+        });
+    },
+    deletComment: (req: Request, res: Response, next: NextFunction) => {
+        console.log(req.body);
+
+        const { postId, commentId } = req.body
+        PostClient.DeleteComment({ postId, commentId }, (err: Error | null, result: any) => {
             if (err) {
                 console.error("Error: ", err);
                 return res.status(500).json({ error: 'Internal Server Error' });

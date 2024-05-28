@@ -6,6 +6,7 @@ service PostServices {
    rpc PostLike(LikePost) returns (PostResponse){};
    rpc PostDisLike(LikePost) returns (PostResponse){};
    rpc PostComment(CommentPost) returns (PostResponse){};
+   rpc DeleteComment(deleteComment) returns (PostResponse){};
 }
 
 message Empty {
@@ -34,6 +35,7 @@ message Comment {
     string userId = 1;
     string content = 2;
     string createdAt = 3;
+    string _id = 4;
 }
 
 message Like {
@@ -70,3 +72,9 @@ message CommentPost {
   string postId = 2;
   string comment = 3;
 }
+
+message deleteComment {
+  string postId = 1;
+  string commentId = 2;
+}
+

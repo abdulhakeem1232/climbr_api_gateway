@@ -7,6 +7,8 @@ service PostServices {
    rpc PostDisLike(LikePost) returns (PostResponse){};
    rpc PostComment(CommentPost) returns (PostResponse){};
    rpc DeleteComment(deleteComment) returns (PostResponse){};
+   rpc ReportPost(reportPost) returns (PostResponse){};
+   rpc GetReportedPost(Empty) returns (GetPostResponse){};
 }
 
 message Empty {
@@ -43,6 +45,11 @@ message Like {
     string createdAt = 2;
 }
 
+message report {
+  string userId = 1;
+  string reason = 2;
+}
+
 message PostDetails {
   string _id = 1;
   string userId = 2;
@@ -51,6 +58,7 @@ message PostDetails {
   repeated Comment comments = 5;
   repeated Like likes = 6;
   string createdAt = 7;
+  repeated report reported = 8;
 }
 
 message GetPostResponse {
@@ -76,5 +84,11 @@ message CommentPost {
 message deleteComment {
   string postId = 1;
   string commentId = 2;
+}
+
+message reportPost {
+  string postId = 1;
+  string userId = 2;
+  string reason = 3;
 }
 

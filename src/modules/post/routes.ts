@@ -16,7 +16,8 @@ postRoute.get('/getall', authMiddleware, PostController.getallpost);
 postRoute.post('/like', authMiddleware, PostController.like)
 postRoute.post('/dislike', authMiddleware, PostController.dislike);
 postRoute.post('/comment', authMiddleware, PostController.comment);
-postRoute.delete('/deleteComment', authMiddleware, PostController.deletComment)
+postRoute.delete('/deleteComment', authMiddleware, PostController.deletComment);
+postRoute.post('/report', PostController.reportPost)
 
 
 

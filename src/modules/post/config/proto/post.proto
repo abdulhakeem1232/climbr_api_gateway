@@ -9,7 +9,10 @@ service PostServices {
    rpc DeleteComment(deleteComment) returns (PostResponse){};
    rpc ReportPost(reportPost) returns (PostResponse){};
    rpc GetReportedPost(Empty) returns (GetPostResponse){};
-}
+   rpc GetUserPost(UserId) returns (GetPostResponse){};
+   rpc DeletePost(deleteComment) returns (PostResponse){};
+   rpc EditPost(updatePostRequest) returns (PostResponse){};
+   }
 
 message Empty {
 
@@ -27,6 +30,11 @@ message PostRequest {
   string userId = 1;
   string description = 2;
   FileDetails image = 3;
+}
+
+message updatePostRequest {
+  string postId = 1;
+  string description = 2;
 }
 
 message PostResponse {
@@ -90,5 +98,9 @@ message reportPost {
   string postId = 1;
   string userId = 2;
   string reason = 3;
+}
+
+message UserId {
+  string userId = 1;
 }
 

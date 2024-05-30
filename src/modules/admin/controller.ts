@@ -4,9 +4,9 @@ import { RecruiterClient } from "../recruiter/config/grpcClient/recruiterClient"
 import { PostClient } from "../post/config/grpcClient/postClient";
 
 export const adminController = {
+
     getallUser: (req: Request, res: Response, next: NextFunction) => {
         try {
-            console.log('came getalluyser');
             UserClient.Getall(req.body, (err: Error | null, result: any) => {
                 if (err) {
                     console.error("Error: ", err);
@@ -20,9 +20,9 @@ export const adminController = {
             return res.status(500).json({ error: 'Internal Server Error' });
         }
     },
+
     updateStatus: (req: Request, res: Response, next: NextFunction) => {
         try {
-            console.log('came getalluyser');
             UserClient.UpdateStatus(req.body, (err: Error | null, result: any) => {
                 if (err) {
                     console.error("Error: ", err);
@@ -36,9 +36,9 @@ export const adminController = {
             return res.status(500).json({ error: 'Internal Server Error' });
         }
     },
+
     updateApproval: (req: Request, res: Response, next: NextFunction) => {
         try {
-            console.log('came getallreee');
             RecruiterClient.Approval(req.body, (err: Error | null, result: any) => {
                 if (err) {
                     console.error("Error: ", err);
@@ -52,9 +52,9 @@ export const adminController = {
             return res.status(500).json({ error: 'Internal Server Error' });
         }
     },
+
     getallrecruiter: (req: Request, res: Response, next: NextFunction) => {
         try {
-            console.log('came getall recruiter');
             RecruiterClient.Getall(req.body, (err: Error | null, result: any) => {
                 if (err) {
                     console.error("Error: ", err);
@@ -68,9 +68,9 @@ export const adminController = {
             return res.status(500).json({ error: 'Internal Server Error' });
         }
     },
+
     updateStatusRecruiter: (req: Request, res: Response, next: NextFunction) => {
         try {
-            console.log('came getallreee');
             RecruiterClient.UpdateStatus(req.body, (err: Error | null, result: any) => {
                 if (err) {
                     console.error("Error: ", err);
@@ -84,9 +84,9 @@ export const adminController = {
             return res.status(500).json({ error: 'Internal Server Error' });
         }
     },
+
     reportedpost: (req: Request, res: Response, next: NextFunction) => {
         try {
-            console.log('came reported post');
             PostClient.GetReportedPost(req.body, async (err: Error | null, result: any) => {
                 if (err) {
                     console.error("Error: ", err);
@@ -99,8 +99,6 @@ export const adminController = {
                 const userIds = result.posts.flatMap((post: any) =>
                     post.reported?.map((report: any) => report.userId) || []
                 )
-                console.log(userIds, 'wjdswksdjwkskskskkksjksssssss');
-
                 const userData = await Promise.all(
                     userIds.map((userId: string) => {
                         return new Promise((resolve, reject) => {
@@ -129,4 +127,5 @@ export const adminController = {
             return res.status(500).json({ error: 'Internal Server Error' });
         }
     },
+
 }

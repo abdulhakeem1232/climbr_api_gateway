@@ -17,6 +17,7 @@ userRoute.post('/resetPassword', UserController.resetPassword)
 userRoute.post('/resendOtp', UserController.resendOtp)
 userRoute.get('/logout', UserController.logout)
 userRoute.get('/getStatus', UserController.getStatus)
+userRoute.get('/getUserDetails/:id', authMiddleware, UserController.getDetails)
 
 
 export default userRoute;

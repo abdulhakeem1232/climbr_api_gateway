@@ -1,10 +1,13 @@
 import express, { Request, Response, NextFunction } from "express";
 import { UserClient } from "./config/grpcClient/userClient";
+import { PostClient } from "../post/config/grpcClient/postClient";
+import { JobClient } from '../jobPost/config/grpcClient/jobClients'
 import * as dotenv from 'dotenv';
 import jwt, { VerifyErrors } from 'jsonwebtoken';
 
 dotenv.config();
 export const UserController = {
+
   register: (req: Request, res: Response, next: NextFunction) => {
     try {
       UserClient.Register(req.body, (err: Error | null, result: any) => {
@@ -93,6 +96,7 @@ export const UserController = {
       return res.status(500).json({ error: 'Internal Server Error' });
     }
   },
+
   loginwithgoogle: (req: Request, res: Response, next: NextFunction) => {
     try {
       UserClient.LoginwithGoogle(req.body, (err: Error | null, result: any) => {
@@ -116,9 +120,9 @@ export const UserController = {
       return res.status(500).json({ error: 'Internal Server Error' });
     }
   },
+
   emailValidate: (req: Request, res: Response, next: NextFunction) => {
     try {
-      console.log('came email validate', req.body);
       UserClient.EmailValidate(req.body, (err: Error | null, result: any) => {
         if (err) {
           console.error("Error: ", err);
@@ -136,12 +140,11 @@ export const UserController = {
       return res.status(500).json({ error: 'Internal Server Error' });
     }
   },
+
   resetPassword: (req: Request, res: Response, next: NextFunction) => {
     try {
-      console.log('came password reset', req.body);
       const password = req.body.password;
       const email = req.cookies.email;
-      console.log('emailpassword', password, email, req.body);
 
       UserClient.Passwordreset({ email: email, password: password }, (err: Error | null, result: any) => {
         if (err) {
@@ -156,6 +159,7 @@ export const UserController = {
       return res.status(500).json({ error: 'Internal Server Error' });
     }
   },
+
   resendOtp: (req: Request, res: Response, next: NextFunction) => {
     try {
       const email = req.cookies.userdata ? JSON.parse(req.cookies.userdata).email : req.cookies.email;
@@ -172,6 +176,7 @@ export const UserController = {
       return res.status(500).json({ error: 'Internal Server Error' });
     }
   },
+
   logout: (req: Request, res: Response, next: NextFunction) => {
     try {
       res.clearCookie('token');
@@ -184,6 +189,7 @@ export const UserController = {
       return res.status(500).json({ error: 'Internal Server Error' });
     }
   },
+
   getStatus: (req: Request, res: Response, next: NextFunction) => {
     try {
       const token = req.cookies.token;
@@ -209,7 +215,63 @@ export const UserController = {
       console.error("Error during get staus user:", error);
       return res.status(500).json({ error: 'Internal Server Error' });
     }
-  }
+  },
+
+  getDetails: (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params;
+      UserClient.UserDetails({ userId: id }, async (err: Error | null, result: any) => {
+        if (err) {
+          console.error("Error: ", err);
+          return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        console.log("Response from userclient for user details:", result);
+
+        try {
+          PostClient.GetUserPost({ userId: id }, async (err: Error | null, postData: any) => {
+            if (err) {
+              console.error("Error fetching post data:", err);
+              return res.status(500).json({ error: 'Internal Server Error' });
+            }
+
+            console.log("Response from post for user details:", postData);
+
+            result.postData = postData.posts;
+
+            const jobIds = result?.appliedJobs.map((job: any) => job.jobId);
+
+            let jobDetails = await Promise.all(jobIds.map((id: string) => {
+              return new Promise((resolve, reject) => {
+                JobClient.GetsingleJob({ id: id }, (err: Error | null, jobData: any) => {
+                  if (err) {
+                    console.error("Error fetching job data:", err);
+                    reject(err);
+                  } else {
+                    resolve(jobData);
+                  }
+                });
+              });
+            }));
+
+            result?.appliedJobs.forEach((job: any) => {
+              job.jobData = jobDetails.find((data: any) => data._id == job.jobId);
+            });
+
+            console.log(result, '00000000000000000000000000');
+            return res.json(result);
+          });
+        } catch (error) {
+          console.error("Error during fetching post data:", error);
+          return res.status(500).json({ error: 'Internal Server Error' });
+        }
+      });
+    } catch (error) {
+      console.error("Error during getDetails:", error);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+  },
+
 
 
 

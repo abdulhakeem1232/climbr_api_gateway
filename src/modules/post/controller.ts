@@ -181,4 +181,41 @@ export const PostController = {
             return res.status(500).json({ error: 'Internal Server Error' });
         }
     },
+    delete: (req: Request, res: Response, next: NextFunction) => {
+        try {
+            console.log(req.body);
+
+            const { postId } = req.body
+            PostClient.DeletePost({ postId }, (err: Error | null, result: any) => {
+                if (err) {
+                    console.error("Error: ", err);
+                    return res.status(500).json({ error: 'Internal Server Error' });
+                }
+                console.log("Response from postclient for delete post:", result);
+                return res.json(result);
+            });
+        } catch (error) {
+            console.error("Error during delete  post:", error);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
+    editPost: (req: Request, res: Response, next: NextFunction) => {
+        try {
+
+            const { id } = req.params
+            const { description } = req.body
+            console.log(id, description, 'edit post ',);
+            PostClient.EditPost({ postId: id, description: description }, (err: Error | null, result: any) => {
+                if (err) {
+                    console.error("Error: ", err);
+                    return res.status(500).json({ error: 'Internal Server Error' });
+                }
+                console.log("Response from postclient for delete post:", result);
+                return res.json(result);
+            });
+        } catch (error) {
+            console.error("Error during edit post:", error);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
 }

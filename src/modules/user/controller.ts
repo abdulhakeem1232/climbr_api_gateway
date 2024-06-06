@@ -111,7 +111,9 @@ export const UserController = {
           const token = jwt.sign({ email: email, userId: id }, process.env.SECRET_KEY, { expiresIn: '1h' })
           const expirationDate = new Date();
           expirationDate.setTime(expirationDate.getTime() + 60 * 60 * 1000);
+          const role = 'user'
           res.cookie('token', token, { expires: expirationDate });
+          res.cookie('role', role, { expires: expirationDate })
         }
         return res.json(result);
       })
@@ -239,24 +241,26 @@ export const UserController = {
 
             result.postData = postData.posts;
 
-            const jobIds = result?.appliedJobs.map((job: any) => job.jobId);
+            if (result?.appliedJobs) { // Check if appliedJobs is not undefined
+              const jobIds = result.appliedJobs.map((job: any) => job.jobId);
 
-            let jobDetails = await Promise.all(jobIds.map((id: string) => {
-              return new Promise((resolve, reject) => {
-                JobClient.GetsingleJob({ id: id }, (err: Error | null, jobData: any) => {
-                  if (err) {
-                    console.error("Error fetching job data:", err);
-                    reject(err);
-                  } else {
-                    resolve(jobData);
-                  }
+              let jobDetails = await Promise.all(jobIds.map((id: string) => {
+                return new Promise((resolve, reject) => {
+                  JobClient.GetsingleJob({ id: id }, (err: Error | null, jobData: any) => {
+                    if (err) {
+                      console.error("Error fetching job data:", err);
+                      reject(err);
+                    } else {
+                      resolve(jobData);
+                    }
+                  });
                 });
-              });
-            }));
+              }));
 
-            result?.appliedJobs.forEach((job: any) => {
-              job.jobData = jobDetails.find((data: any) => data._id == job.jobId);
-            });
+              result.appliedJobs.forEach((job: any) => {
+                job.jobData = jobDetails.find((data: any) => data._id == job.jobId);
+              });
+            }
 
             console.log(result, '00000000000000000000000000');
             return res.json(result);
@@ -271,6 +275,7 @@ export const UserController = {
       return res.status(500).json({ error: 'Internal Server Error' });
     }
   },
+
 
 
 

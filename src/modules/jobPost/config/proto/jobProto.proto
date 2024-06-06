@@ -33,6 +33,7 @@ message apllicants {
     string email = 3;
     string mobile = 4;
     string cv = 5;
+    string status = 6;
 }
 
 message JobPost {

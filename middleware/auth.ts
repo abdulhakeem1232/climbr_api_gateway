@@ -23,6 +23,8 @@ const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
 
             return res.status(401).json({ message: 'Unauthorized: Invalid token' });
         }
+        console.log('--------');
+
         const userId = decoded.userId;
         const role = req.cookies.role;
         let userStatus
@@ -35,7 +37,7 @@ const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
                 return res.status(401).json({ message: 'Unauthorized: User/Recruiter is inactive' });
             }
         };
-        if (role == 'user') {
+        if (role == 'user' || role == 'admin') {
             UserClient.GetStatus({ userId }, (err: Error | null, result: any) => {
                 if (err) {
                     console.error("Error: ", err);

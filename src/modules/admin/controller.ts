@@ -6,7 +6,10 @@ import { PostClient } from "../post/config/grpcClient/postClient";
 export const adminController = {
 
     getallUser: (req: Request, res: Response, next: NextFunction) => {
+        console.log('oooo');
+
         try {
+            console.log('oooo');
             UserClient.Getall(req.body, (err: Error | null, result: any) => {
                 if (err) {
                     console.error("Error: ", err);

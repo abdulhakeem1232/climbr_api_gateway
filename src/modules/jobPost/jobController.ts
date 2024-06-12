@@ -6,7 +6,6 @@ import { UserClient } from "../user/config/grpcClient/userClient";
 export const jobController = {
     createJob: (req: Request, res: Response, next: NextFunction) => {
         try {
-            console.log("came apiweqdqe gateway job", req.body);
             const buffer = req.file?.buffer
             const fileDetails = {
                 originalname: req.file?.originalname,
@@ -15,7 +14,6 @@ export const jobController = {
                 buffer: req.file?.buffer,
                 size: req.file?.size
             }
-            console.log('image', fileDetails);
             req.body.companylogo = fileDetails;
 
             JobClient.CreateJob(req.body, (err: Error | null, result: any) => {
@@ -23,7 +21,6 @@ export const jobController = {
                     console.error("Error:", err);
                     return res.status(500).json({ error: 'Internal Server Error' });
                 }
-                console.log("Response from jobClient:", result);
                 return res.json(result);
             });
         } catch (error) {
@@ -41,7 +38,6 @@ export const jobController = {
                     console.error("Error:", err);
                     return res.status(500).json({ error: 'Internal Server Error' });
                 }
-                console.log("Response from jobClient:", result);
                 return res.json(result);
             });
         } catch (error) {
@@ -51,13 +47,11 @@ export const jobController = {
     },
     getallJob: (req: Request, res: Response) => {
         try {
-            console.log('getall00000000000');
             JobClient.GetAllJob(req.body, (err: Error | null, result: any) => {
                 if (err) {
                     console.error("Error:", err);
                     return res.status(500).json({ error: 'Internal Server Error' });
                 }
-                console.log("Response from jobClient:", result);
                 return res.json(result);
             });
         } catch (error) {
@@ -67,14 +61,12 @@ export const jobController = {
     },
     getsingleJob: (req: Request, res: Response) => {
         try {
-            console.log('getasingle00000000000');
             const id = req.params.id
             JobClient.GetsingleJob({ id }, (err: Error | null, result: any) => {
                 if (err) {
                     console.error("Error:", err);
                     return res.status(500).json({ error: 'Internal Server Error' });
                 }
-                console.log("Response from jobClient:", result);
                 return res.json(result);
             });
         } catch (error) {
@@ -97,20 +89,18 @@ export const jobController = {
                 size: req.file?.size
             }
             req.body.cv = fileDetails;
-            JobClient.ApplyJob(req.body, (err: Error | null, result: any) => {
-                if (err) {
-                    console.error("Error:", err);
-                    return res.status(500).json({ error: 'Internal Server Error' });
+            UserClient.UpdateJobStatus({ jobid, userid, status }, (updateErr: Error | null, updateResult: any) => {
+                if (updateErr) {
+                    console.error("Error updating job status:", updateErr);
+                    return res.status(500).json({ error: 'Error updating job status' });
                 }
-                console.log("Response from jobClient:", result);
-                UserClient.UpdateJobStatus({ jobid, userid, status }, (updateErr: Error | null, updateResult: any) => {
-                    if (updateErr) {
-                        console.error("Error updating job status:", updateErr);
-                        return res.status(500).json({ error: 'Error updating job status' });
+                JobClient.ApplyJob(req.body, (applyErr: Error | null, applyResult: any) => {
+                    if (applyErr) {
+                        console.error("Error:", applyErr);
+                        return res.status(500).json({ error: 'Internal Server Error' });
                     }
-                    console.log("Response from userClient:", updateResult);
                     return res.json({ message: 'Job applied successfully and status updated' });
-                })
+                });
             });
         } catch (error) {
             console.error("Error during applying job:", error);
@@ -128,7 +118,6 @@ export const jobController = {
                     console.error("Error:", err);
                     return res.status(500).json({ error: 'Internal Server Error' });
                 }
-                console.log("Response from jobClient:", result);
                 return res.json(result);
             });
         } catch (error) {
@@ -147,7 +136,6 @@ export const jobController = {
                     console.error("Error:", err);
                     return res.status(500).json({ error: 'Internal Server Error' });
                 }
-                console.log("Response from jobClient for update:", result);
                 return res.json(result);
             });
         } catch (error) {

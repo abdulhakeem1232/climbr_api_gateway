@@ -24,6 +24,7 @@ service UserServices {
     rpc GetFollowings(UserId) returns (Followings){};
     rpc FollowUser(Follow) returns (passwordOtpResponse){};
     rpc UnFollowUser(Follow) returns (passwordOtpResponse){};
+    rpc SearchUser(search) returns (searchesUserResponse){};
 
 }
 
@@ -35,6 +36,10 @@ message JobDetails {
   string jobId = 1;
   string status = 2;
   string _id = 3;
+}
+
+message search {
+  string text = 1;
 }
 
 message Education {
@@ -71,6 +76,10 @@ message UserData {
     string banner = 12;
     string header = 13;
     repeated Experience experience = 14;
+}
+
+message searchesUserResponse {
+  repeated UserData users = 1;
 }
 
 message RegistrationResponse {
@@ -217,6 +226,7 @@ message skillsData {
 
 message Followings {
   repeated string followings = 1;
+  repeated string followers = 2;
 }
 
 message Follow {

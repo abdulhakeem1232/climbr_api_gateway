@@ -153,7 +153,6 @@ export const UserController = {
           console.error("Error: ", err);
           return res.status(500).json({ error: 'Internal Server Error' });
         }
-        console.log("Response from UserClient for reset password:", result);
         return res.json(result);
       })
     } catch (error) {
@@ -209,7 +208,6 @@ export const UserController = {
             console.error("Error: ", err);
             return res.status(500).json({ error: 'Internal Server Error' });
           }
-          console.log("Response from userclient for auth in api gateway:", result);
           return res.json(result);
         });
       });
@@ -228,8 +226,6 @@ export const UserController = {
           return res.status(500).json({ error: 'Internal Server Error' });
         }
 
-        console.log("Response from userclient for user details:", result);
-
         try {
           PostClient.GetUserPost({ userId: id }, async (err: Error | null, postData: any) => {
             if (err) {
@@ -237,11 +233,9 @@ export const UserController = {
               return res.status(500).json({ error: 'Internal Server Error' });
             }
 
-            console.log("Response from post for user details:", postData);
-
             result.postData = postData.posts;
 
-            if (result?.appliedJobs) { // Check if appliedJobs is not undefined
+            if (result?.appliedJobs) {
               const jobIds = result.appliedJobs.map((job: any) => job.jobId);
 
               let jobDetails = await Promise.all(jobIds.map((id: string) => {
@@ -261,8 +255,6 @@ export const UserController = {
                 job.jobData = jobDetails.find((data: any) => data._id == job.jobId);
               });
             }
-
-            console.log(result, '00000000000000000000000000');
             return res.json(result);
           });
         } catch (error) {

@@ -1,5 +1,6 @@
+// src/index.ts
 import dotenv from "dotenv";
-import express, { Request, Response, Express, NextFunction } from "express";
+import express, { Express } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import userRoute from "./modules/user/routes";
@@ -9,7 +10,8 @@ import jobRoute from "./modules/jobPost/routes";
 import adminRoute from "./modules/admin/routes";
 import messageRoute from "./modules/message/routes";
 import { createServer } from "http";
-import { Server } from 'socket.io'
+import setupSocket from "./socket/socket";
+
 dotenv.config();
 
 const app: Express = express();
@@ -29,27 +31,11 @@ app.use("/recruiter", recruiterRoute);
 app.use('/admin', adminRoute)
 app.use("/post", postRoute);
 app.use("/job", jobRoute);
-app.use("/message", messageRoute)
+app.use("/message", messageRoute);
 
 const server = createServer(app);
-const io = new Server(server, {
-  cors: {
-    origin: 'http://localhost:3000',
-    methods: ['GET', 'POST']
-  }
-});
-
-io.on("connection", (socket) => {
-  console.log("A user connected", socket.id);
-
-  socket.on("sendMessage", (data) => {
-    console.log("Message received:", data);
-    io.emit("message", { name: data.name, message: data.message });
-  });
-
-  socket.on("disconnect", () => {
-    console.log('user Disconnected');
-  });
+setupSocket(server).then(io => {
+  console.log('Socket.io is set up.');
 });
 
 server.listen(port, () => {

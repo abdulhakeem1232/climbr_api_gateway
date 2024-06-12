@@ -1,5 +1,44 @@
 syntax = "proto3";
 
-service Message {
-    
+service MessageServices {
+    rpc CreateChat(RequestCreateChat) returns (ResponseCreateChat);
+    rpc GetChatsList(RequestGetChatsList) returns (ResponseGetChatsList);
+    rpc getMessages(RequestMessage) returns (ResponseChatMessage);
+}
+
+message RequestCreateChat {
+    string userId = 1;
+    string guestId = 2;
+}
+
+message ResponseCreateChat {
+    string chatId = 1;
+    bool success = 2;
+}
+
+message RequestGetChatsList {
+    string userId = 1;
+}
+
+message ResponseGetChatsList {
+    repeated Chat chatlist = 1;
+}
+
+message Chat {
+    string _id = 1;
+    repeated string participants = 2;
+}
+
+message RequestMessage {
+    string chatId = 1;
+}
+
+message ChatsMessage {
+    string sender = 1;
+    string message = 2;
+    string createdAt = 3;
+}
+
+message ResponseChatMessage {
+    repeated ChatsMessage chats = 1;
 }

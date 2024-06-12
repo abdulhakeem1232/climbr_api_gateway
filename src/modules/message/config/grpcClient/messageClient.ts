@@ -5,15 +5,23 @@ import * as protoLoader from "@grpc/proto-loader";
 
 dotenv.config();
 
-const packageDefinition = protoLoader.loadSync(
-    path.join(__dirname, "../proto/message.proto")
-);
+const PROTO_PATH = path.join(__dirname, "../proto/message.proto");
+const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
+    keepCase: true,
+    longs: String,
+    enums: String,
+    defaults: true,
+    oneofs: true
+});
 const messageProto = grpc.loadPackageDefinition(packageDefinition) as any;
 
-const MessageServices = messageProto.JobServices as grpc.ServiceClientConstructor;
+const MessageServices = messageProto.MessageServices as grpc.ServiceClientConstructor;
+
+
+const MESSAGE_PORT = process.env.MESSAGE_PORT
 
 const MessageClient = new MessageServices(
-    `0.0.0.0:${process.env.MESSAGE_PORT}`,
+    `0.0.0.0:${MESSAGE_PORT}`,
     grpc.credentials.createInsecure()
 );
 

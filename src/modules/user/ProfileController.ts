@@ -165,5 +165,21 @@ export const profileController = {
             return res.status(500).json({ error: 'Internal Server Error' });
         }
     },
+    searchUser: (req: Request, res: Response, next: NextFunction) => {
+        try {
+            console.log('unfollow');
+            const { text } = req.query;
+            UserClient.SearchUser({ text }, (err: Error | null, result: any) => {
+                if (err) {
+                    return res.status(500).json({ error: 'Internal Server Error' });
+                }
+                console.log(result, 'in search');
+                return res.json(result);
+            });
+        } catch (error) {
+            console.error("Error during Searching User:", error);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
 
 }

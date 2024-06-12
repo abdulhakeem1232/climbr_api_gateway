@@ -30,6 +30,7 @@ userRoute.put('/updateSkills/:id', authMiddleware, profileController.skillsData)
 userRoute.get('/getFollowings/:id', authMiddleware, profileController.getFollowings)
 userRoute.get('/follow/:userId/:guestId', authMiddleware, profileController.follow)
 userRoute.get('/unfollow/:userId/:guestId', authMiddleware, profileController.unfollow)
+userRoute.get('/SearchUser', authMiddleware, profileController.searchUser)
 
 
 

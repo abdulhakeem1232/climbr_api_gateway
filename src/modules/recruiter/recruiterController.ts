@@ -35,8 +35,6 @@ export const recruiterController = {
       const otpFromCookie = req.cookies.otp;
       const userdataFromCookie = JSON.parse(req.cookies.userdata);
       const enterOtp = req.body.otp;
-      console.log('ppp', userdataFromCookie);
-
       RecruiterClient.OtpVerify({ userdata: userdataFromCookie, otp: otpFromCookie, enterOtp: enterOtp }, (err: Error | null, result: any) => {
         if (err) {
           console.error("Error:", err);
@@ -71,7 +69,6 @@ export const recruiterController = {
           console.error("Error:", err);
           return res.status(500).json({ error: 'Internal Server Error' });
         }
-        console.log("Response from UserClient:", result);
 
         if (result.success) {
           const { email } = req.body.email;
@@ -95,5 +92,4 @@ export const recruiterController = {
       return res.status(500).json({ error: 'Internal Server Error' });
     }
   },
-
 }

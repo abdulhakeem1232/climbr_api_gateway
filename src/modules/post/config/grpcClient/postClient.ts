@@ -6,8 +6,7 @@ import * as protoLoader from "@grpc/proto-loader";
 dotenv.config();
 
 const packageDefinition = protoLoader.loadSync(
-    path.join(__dirname, "../proto/post.proto")
-);
+    path.join(__dirname, "../proto/post.proto"));
 const recruiterProto = grpc.loadPackageDefinition(packageDefinition) as any;
 
 const PostServices = recruiterProto.PostServices as grpc.ServiceClientConstructor;

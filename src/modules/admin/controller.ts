@@ -15,7 +15,6 @@ export const adminController = {
                     console.error("Error: ", err);
                     return res.status(500).json({ error: 'Internal Server Error' });
                 }
-                console.log("Response from UserClient:", result);
                 return res.json(result);
             })
         } catch (error) {
@@ -31,7 +30,6 @@ export const adminController = {
                     console.error("Error: ", err);
                     return res.status(500).json({ error: 'Internal Server Error' });
                 }
-                console.log("Response from UserClient:", result);
                 return res.json(result);
             })
         } catch (error) {
@@ -47,7 +45,6 @@ export const adminController = {
                     console.error("Error: ", err);
                     return res.status(500).json({ error: 'Internal Server Error' });
                 }
-                console.log("Response from UserClient:", result);
                 return res.json(result);
             })
         } catch (error) {
@@ -63,7 +60,6 @@ export const adminController = {
                     console.error("Error: ", err);
                     return res.status(500).json({ error: 'Internal Server Error' });
                 }
-                console.log("Response from UserClient:", result);
                 return res.json(result);
             })
         } catch (error) {
@@ -79,7 +75,6 @@ export const adminController = {
                     console.error("Error: ", err);
                     return res.status(500).json({ error: 'Internal Server Error' });
                 }
-                console.log("Response from UserClient:", result);
                 return res.json(result);
             })
         } catch (error) {
@@ -95,7 +90,6 @@ export const adminController = {
                     console.error("Error: ", err);
                     return res.status(500).json({ error: 'Internal Server Error' });
                 }
-                console.log("Response from UserClient for reported data:", result);
                 if (!Array.isArray(result.posts) || result.posts.length === 0) {
                     return res.json({ posts: [] });
                 }

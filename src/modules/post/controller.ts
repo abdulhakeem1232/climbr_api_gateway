@@ -35,7 +35,6 @@ export const PostController = {
                     console.error("Error: ", err);
                     return res.status(500).json({ error: 'Internal Server Error' });
                 }
-                console.log("Response from postclient for creating post:", result);
                 return res.json(result);
             });
         } catch (error) {
@@ -84,7 +83,6 @@ export const PostController = {
                         });
                     }
                 });
-                console.log(result, 'after update');
 
                 return res.json(result);
             } catch (error) {
@@ -103,7 +101,6 @@ export const PostController = {
                     console.error("Error: ", err);
                     return res.status(500).json({ error: 'Internal Server Error' });
                 }
-                console.log("Response from postclient for liking post:", result);
                 return res.json(result);
             });
         } catch (error) {
@@ -120,7 +117,6 @@ export const PostController = {
                     console.error("Error: ", err);
                     return res.status(500).json({ error: 'Internal Server Error' });
                 }
-                console.log("Response from postclient for dislike post:", result);
                 return res.json(result);
             });
         } catch (error) {
@@ -137,7 +133,6 @@ export const PostController = {
                     console.error("Error: ", err);
                     return res.status(500).json({ error: 'Internal Server Error' });
                 }
-                console.log("Response from postclient for comment post:", result);
                 return res.json(result);
             });
         } catch (error) {
@@ -155,7 +150,6 @@ export const PostController = {
                     console.error("Error: ", err);
                     return res.status(500).json({ error: 'Internal Server Error' });
                 }
-                console.log("Response from postclient for comment post:", result);
                 return res.json(result);
             });
         } catch (error) {
@@ -173,7 +167,6 @@ export const PostController = {
                     console.error("Error: ", err);
                     return res.status(500).json({ error: 'Internal Server Error' });
                 }
-                console.log("Response from postclient for comment post:", result);
                 return res.json(result);
             });
         } catch (error) {
@@ -191,7 +184,6 @@ export const PostController = {
                     console.error("Error: ", err);
                     return res.status(500).json({ error: 'Internal Server Error' });
                 }
-                console.log("Response from postclient for delete post:", result);
                 return res.json(result);
             });
         } catch (error) {
@@ -210,7 +202,6 @@ export const PostController = {
                     console.error("Error: ", err);
                     return res.status(500).json({ error: 'Internal Server Error' });
                 }
-                console.log("Response from postclient for delete post:", result);
                 return res.json(result);
             });
         } catch (error) {

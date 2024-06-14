@@ -37,6 +37,8 @@ message ChatsMessage {
     string sender = 1;
     string message = 2;
     string createdAt = 3;
+    string filePath = 4;
+    string fileType = 5;
 }
 
 message ResponseChatMessage {

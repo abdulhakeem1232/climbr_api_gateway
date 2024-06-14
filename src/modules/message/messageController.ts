@@ -1,7 +1,22 @@
 import express, { Request, Response, NextFunction } from "express";
 import { MessageClient } from "./config/grpcClient/messageClient";
 import { UserClient } from "../user/config/grpcClient/userClient";
+import { S3Client, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
+import crypto from 'crypto'
 
+const randomImageName = (bytes = 32) => crypto.randomBytes(bytes).toString('hex')
+const access_key = process.env.ACCESS_KEY
+const secret_access_key = process.env.SECRET_ACCESS_KEY
+const bucket_region = process.env.BUCKET_REGION
+const bucket_name = process.env.BUCKET_NAME
+
+const s3: S3Client = new S3Client({
+    credentials: {
+        accessKeyId: access_key || '',
+        secretAccessKey: secret_access_key || ''
+    },
+    region: process.env.BUCKET_REGION
+});
 
 export const messageController = {
 
@@ -74,6 +89,27 @@ export const messageController = {
             });
         } catch (error) {
             console.error("Error during getting message:", error);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
+    sendMessages: async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            console.log(req.body, req.file);
+            const name = randomImageName()
+            const params = {
+                Bucket: bucket_name,
+                Key: name,
+                Body: req.file?.buffer,
+                ContetType: req.file?.mimetype,
+            }
+            const command = new PutObjectCommand(params)
+            await s3.send(command);
+            const fileType = req.file?.mimetype;
+            const filePath = name;
+            console.log('stored in s3');
+            return res.json({ fileType, filePath });
+        } catch (error) {
+            console.error("Error during sending message:", error);
             return res.status(500).json({ error: 'Internal Server Error' });
         }
     },

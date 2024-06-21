@@ -185,29 +185,30 @@ export const UserController = {
         res.clearCookie('token');
         res.clearCookie('role');
         res.status(200).json({ message: 'Logout successful' });
-      }
-      const token = req.cookies.token;
-      if (!process.env.SECRET_KEY) {
-        throw new Error('Secret key is not defined in environment variables');
-      }
-      jwt.verify(token, process.env.SECRET_KEY, (err: any, decoded: any) => {
-        if (err) {
-          console.error("Error decoding token: ", err);
-          return res.status(401).json({ error: 'Unauthorized' });
+      } else {
+        const token = req.cookies.token;
+        if (!process.env.SECRET_KEY) {
+          throw new Error('Secret key is not defined in environment variables');
         }
-        const userId = decoded.userId;
-        UserClient.Logout({ userId }, (err: Error | null, result: any) => {
+        jwt.verify(token, process.env.SECRET_KEY, (err: any, decoded: any) => {
           if (err) {
-            console.error("Error: ", err);
-            return res.status(500).json({ error: 'Internal Server Error' });
+            console.error("Error decoding token: ", err);
+            return res.status(401).json({ error: 'Unauthorized' });
           }
-          res.clearCookie('token');
-          if (req.cookies.role) {
-            res.clearCookie('role');
-          }
-          res.status(200).json({ message: 'Logout successful' });
+          const userId = decoded.userId;
+          UserClient.Logout({ userId }, (err: Error | null, result: any) => {
+            if (err) {
+              console.error("Error: ", err);
+              return res.status(500).json({ error: 'Internal Server Error' });
+            }
+            res.clearCookie('token');
+            if (req.cookies.role) {
+              res.clearCookie('role');
+            }
+            res.status(200).json({ message: 'Logout successful' });
+          });
         });
-      });
+      }
     } catch (error) {
       console.error("Error during logout user:", error);
       return res.status(500).json({ error: 'Internal Server Error' });

@@ -5,7 +5,7 @@ service PostServices {
    rpc GetAllPost(GetPostRequest) returns (GetPostResponse){};
    rpc PostLike(LikePost) returns (PostResponse){};
    rpc PostDisLike(LikePost) returns (PostResponse){};
-   rpc PostComment(CommentPost) returns (PostResponse){};
+   rpc PostComment(CommentPost) returns (PostDetails){};
    rpc DeleteComment(deleteComment) returns (PostResponse){};
    rpc ReportPost(reportPost) returns (PostResponse){};
    rpc GetReportedPost(Empty) returns (GetPostResponse){};

@@ -22,14 +22,14 @@ export const PostController = {
                 email = decoded.email;
                 userId = decoded.userId
             }
-            const buffer = req.file?.buffer
+            const { originalname, encoding, mimetype, buffer, size } = req.file || {};
             const fileDetails = {
-                originalname: req.file?.originalname,
-                encoding: req.file?.encoding,
-                mimetype: req.file?.mimetype,
-                buffer: req.file?.buffer,
-                size: req.file?.size
-            }
+                originalname,
+                encoding,
+                mimetype,
+                buffer,
+                size
+            };
             PostClient.CreatePost({ image: fileDetails, userId: userId, description: description }, (err: Error | null, result: any) => {
                 if (err) {
                     console.error("Error: ", err);
@@ -133,6 +133,7 @@ export const PostController = {
                     console.error("Error: ", err);
                     return res.status(500).json({ error: 'Internal Server Error' });
                 }
+                console.log('cpmment op', result);
                 return res.json(result);
             });
         } catch (error) {

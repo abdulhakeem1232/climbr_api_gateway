@@ -44,9 +44,10 @@ export const messageController = {
                     console.error("Error: ", err);
                     return res.status(500).json({ error: 'Internal Server Error' });
                 }
+                console.log('res00000000000', result);
                 const filteredChats = result.chatlist.map((chat: any) => {
                     const otherParticipant = chat.participants.find((participant: string) => participant !== userId);
-                    return { _id: chat._id, otherParticipant };
+                    return { _id: chat._id, updatedAt: chat.updatedAt, otherParticipant };
                 });
 
                 const userData = await Promise.all(
@@ -67,6 +68,7 @@ export const messageController = {
                 );
                 const response = filteredChats.map((chat: any, index: number) => ({
                     _id: chat._id,
+                    updatedAt: chat.updatedAt,
                     user: userData[index]
                 }));
                 return res.json(response);

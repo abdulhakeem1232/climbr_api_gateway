@@ -12,5 +12,7 @@ adminRoute.get('/getallrecruiter', authMiddleware, adminController.getallrecruit
 adminRoute.put('/updateRecruiterStatus', authMiddleware, adminController.updateStatusRecruiter)
 adminRoute.put('/approve', authMiddleware, adminController.updateApproval)
 adminRoute.get('/reportedpost', authMiddleware, adminController.reportedpost)
+adminRoute.delete('/post/:postId', authMiddleware, adminController.deletepost)
+
 
 export default adminRoute

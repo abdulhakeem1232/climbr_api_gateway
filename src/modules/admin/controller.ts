@@ -6,10 +6,7 @@ import { PostClient } from "../post/config/grpcClient/postClient";
 export const adminController = {
 
     getallUser: (req: Request, res: Response, next: NextFunction) => {
-        console.log('oooo');
-
         try {
-            console.log('oooo');
             UserClient.Getall(req.body, (err: Error | null, result: any) => {
                 if (err) {
                     console.error("Error: ", err);
@@ -121,6 +118,21 @@ export const adminController = {
             })
         } catch (error) {
             console.error("Error during retrieving repoted posts:", error);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
+    deletepost: (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { postId } = req.params
+            PostClient.DeletePost({ postId }, (err: Error | null, result: any) => {
+                if (err) {
+                    console.error("Error: ", err);
+                    return res.status(500).json({ error: 'Internal Server Error' });
+                }
+                return res.json(result);
+            })
+        } catch (error) {
+            console.error("Error during updating status:", error);
             return res.status(500).json({ error: 'Internal Server Error' });
         }
     },

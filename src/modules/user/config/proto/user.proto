@@ -26,6 +26,7 @@ service UserServices {
     rpc UnFollowUser(Follow) returns (passwordOtpResponse){};
     rpc SearchUser(search) returns (searchesUserResponse){};
     rpc Logout(UserId) returns (OtpVerifyResponse){};
+    rpc Suggestion(UserId) returns (searchesUserResponse){};
 
 }
 
@@ -78,6 +79,8 @@ message UserData {
     string header = 13;
     repeated Experience experience = 14;
     string lastLogged = 15;
+    repeated string following = 16;
+    repeated string followers = 17;
 }
 
 message searchesUserResponse {

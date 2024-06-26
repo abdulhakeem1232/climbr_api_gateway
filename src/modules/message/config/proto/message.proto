@@ -27,6 +27,7 @@ message ResponseGetChatsList {
 message Chat {
     string _id = 1;
     repeated string participants = 2;
+    string updatedAt = 3;
 }
 
 message RequestMessage {

@@ -40,17 +40,12 @@ const setupSocket = async (server: HTTPServer): Promise<SocketIOServer> => {
 
     io.on('connection', (socket) => {
         console.log('A user connected');
-
         const broadcastOnlineUsers = () => {
-            console.log("----------", Array.from(onlineUsers.keys()), 'kkkk', onlineUsers);
-
             io.emit('onlineUsers', Array.from(onlineUsers.keys()));
         };
         socket.on('getOnlineUsers', () => {
-            console.log('00000======');
             socket.emit('onlineUsers', Array.from(onlineUsers.keys()));
         });
-
         socket.on('join', (userId) => {
             onlineUsers.set(userId, socket.id);
             broadcastOnlineUsers();
@@ -69,7 +64,6 @@ const setupSocket = async (server: HTTPServer): Promise<SocketIOServer> => {
             if (onlineUsers.has(userId)) {
                 onlineUsers.delete(userId);
                 broadcastOnlineUsers();
-                console.log(`User ${userId} is offline`);
             }
         });
 
@@ -78,12 +72,10 @@ const setupSocket = async (server: HTTPServer): Promise<SocketIOServer> => {
             if (userId) {
                 onlineUsers.delete(userId);
                 broadcastOnlineUsers();
-                console.log(`User ${userId} is offline`);
             }
         });
 
         socket.on('sendMessage', async (data) => {
-            console.log('Message received: ', data);
             const { chatId, userId, message, filePath, fileType } = data;
             let newMessage = { chatId, sender: userId, message, createdAt: new Date().toISOString(), filePath, fileType };
             if (filePath.trim() != "") {
@@ -97,6 +89,20 @@ const setupSocket = async (server: HTTPServer): Promise<SocketIOServer> => {
             }
             channel.publish(exchange, routingKey, Buffer.from(JSON.stringify(data)));
             io.emit('message', newMessage);
+            io.emit("sortChatlist", newMessage.chatId);
+        });
+        socket.on('callUser', ({ userToCall, from, offer }) => {
+            console.log('------------------------------------------');
+            console.log(userToCall, onlineUsers);
+
+            const userSocketId = onlineUsers.get(userToCall);
+            console.log('===---+++++++++', userSocketId);
+
+            if (userSocketId) {
+                console.log(`incoming call to ${userToCall}:${userSocketId}`);
+
+                io.to(userSocketId).emit('incomingCall', { from, offer });
+            }
         });
     });
 

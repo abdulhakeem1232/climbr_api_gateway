@@ -2,6 +2,7 @@ import express, { Request, Response, NextFunction } from "express";
 import { UserClient } from "../user/config/grpcClient/userClient";
 import { RecruiterClient } from "../recruiter/config/grpcClient/recruiterClient";
 import { PostClient } from "../post/config/grpcClient/postClient";
+import { JobClient } from "../jobPost/config/grpcClient/jobClients";
 
 export const adminController = {
 
@@ -133,6 +134,61 @@ export const adminController = {
             })
         } catch (error) {
             console.error("Error during updating status:", error);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
+    getUserReport: (req: Request, res: Response, next: NextFunction) => {
+        try {
+            UserClient.GetReports({}, (err: Error | null, result: any) => {
+                if (err) {
+                    console.error("Error: ", err);
+                    return res.status(500).json({ error: 'Internal Server Error' });
+                }
+                return res.json(result);
+            })
+        } catch (error) {
+            console.error("Error during user status:", error);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
+    getRecruiterReport: (req: Request, res: Response, next: NextFunction) => {
+        try {
+            RecruiterClient.GetReports({}, (err: Error | null, result: any) => {
+                if (err) {
+                    console.error("Error: ", err);
+                    return res.status(500).json({ error: 'Internal Server Error' });
+                }
+                return res.json(result);
+            })
+        } catch (error) {
+            console.error("Error during user status:", error);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
+    getPostReport: (req: Request, res: Response, next: NextFunction) => {
+        try {
+            PostClient.GetReports({}, (err: Error | null, result: any) => {
+                if (err) {
+                    console.error("Error: ", err);
+                    return res.status(500).json({ error: 'Internal Server Error' });
+                }
+                return res.json(result);
+            })
+        } catch (error) {
+            console.error("Error during post status:", error);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+    }, getJobReport: (req: Request, res: Response, next: NextFunction) => {
+        try {
+            JobClient.GetReports({}, (err: Error | null, result: any) => {
+                if (err) {
+                    console.error("Error: ", err);
+                    return res.status(500).json({ error: 'Internal Server Error' });
+                }
+                return res.json(result);
+            })
+        } catch (error) {
+            console.error("Error during job status:", error);
             return res.status(500).json({ error: 'Internal Server Error' });
         }
     },

@@ -40,25 +40,16 @@ const setupSocket = async (server: HTTPServer): Promise<SocketIOServer> => {
 
     io.on('connection', (socket) => {
         console.log('A user connected');
-        const broadcastOnlineUsers = () => {
-            io.emit('onlineUsers', Array.from(onlineUsers.keys()));
-        };
+
         socket.on('getOnlineUsers', () => {
             socket.emit('onlineUsers', Array.from(onlineUsers.keys()));
         });
+
         socket.on('join', (userId) => {
             onlineUsers.set(userId, socket.id);
             broadcastOnlineUsers();
             console.log(`User ${userId} is online`);
         });
-        // socket.on('reconnect', () => {
-        //     const userId = [...onlineUsers].find(([_, socketId]) => socketId === socket.id)?.[0];
-        //     if (userId) {
-        //         onlineUsers.set(userId, socket.id);
-        //         console.log(`User ${userId} has reconnected`);
-        //         broadcastOnlineUsers();
-        //     }
-        // });
 
         socket.on('leave', (userId) => {
             if (onlineUsers.has(userId)) {
@@ -78,7 +69,7 @@ const setupSocket = async (server: HTTPServer): Promise<SocketIOServer> => {
         socket.on('sendMessage', async (data) => {
             const { chatId, userId, message, filePath, fileType } = data;
             let newMessage = { chatId, sender: userId, message, createdAt: new Date().toISOString(), filePath, fileType };
-            if (filePath.trim() != "") {
+            if (filePath.trim() !== "") {
                 const getObjectParams = {
                     Bucket: bucket_name,
                     Key: filePath,
@@ -91,20 +82,39 @@ const setupSocket = async (server: HTTPServer): Promise<SocketIOServer> => {
             io.emit('message', newMessage);
             io.emit("sortChatlist", newMessage.chatId);
         });
-        socket.on('callUser', ({ userToCall, from, offer }) => {
-            console.log('------------------------------------------');
-            console.log(userToCall, onlineUsers);
 
+        socket.on('callUser', ({ userToCall, from, offer, fromId }) => {
+            console.log(`Incoming call to ${userToCall} from ${from}`);
             const userSocketId = onlineUsers.get(userToCall);
-            console.log('===---+++++++++', userSocketId);
-
             if (userSocketId) {
-                console.log(`incoming call to ${userToCall}:${userSocketId}`);
-
-                io.to(userSocketId).emit('incomingCall', { from, offer });
+                io.to(userSocketId).emit('incomingCall', { from, offer, fromId });
             }
         });
+
+        socket.on('signal', (data) => {
+            const { userId, type, candidate, answer, context } = data;
+            if (context === 'webRTC') {
+                const userSocketId = onlineUsers.get(userId);
+                if (userSocketId) {
+                    io.to(userSocketId).emit('signal', { type, candidate, answer });
+                }
+            }
+        });
+
+        socket.on('callAccepted', ({ userId, answer, context }) => {
+            if (context === 'webRTC') {
+                const userSocketId = onlineUsers.get(userId) || ''
+                console.log('----------');
+                console.log(`Sending call accepted signal to ${userId}${userSocketId}`);
+                io.to(userSocketId).emit('callAcceptedSignal', { answer });
+            }
+        });
+
     });
+
+    const broadcastOnlineUsers = () => {
+        io.emit('onlineUsers', Array.from(onlineUsers.keys()));
+    };
 
     return io;
 };

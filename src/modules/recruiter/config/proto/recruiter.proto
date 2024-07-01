@@ -8,6 +8,7 @@ service RecuiterServices {
     rpc UpdateStatus(UserData) returns (GetAllUsersResponse){};
     rpc Approval(UserData) returns (GetAllUsersResponse){};
     rpc GetStatus(statusRequest) returns (statusResponse){};
+    rpc GetReports(Empty) returns (GetRecruiterStatsResponse){};
 }
 
 message Empty {
@@ -67,4 +68,14 @@ message statusRequest {
 
 message statusResponse {
   bool status = 1;
+}
+
+message MonthStats {
+    int32 month = 1;
+    int32 count = 2;
+}
+
+message GetRecruiterStatsResponse {
+    repeated MonthStats result = 1;
+    string count = 2;
 }

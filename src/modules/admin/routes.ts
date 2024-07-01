@@ -13,6 +13,11 @@ adminRoute.put('/updateRecruiterStatus', authMiddleware, adminController.updateS
 adminRoute.put('/approve', authMiddleware, adminController.updateApproval)
 adminRoute.get('/reportedpost', authMiddleware, adminController.reportedpost)
 adminRoute.delete('/post/:postId', authMiddleware, adminController.deletepost)
+adminRoute.get('/userReport', authMiddleware, adminController.getUserReport)
+adminRoute.get('/recruiterReport', authMiddleware, adminController.getRecruiterReport)
+adminRoute.get('/postReport', authMiddleware, adminController.getPostReport)
+adminRoute.get('/jobReport', authMiddleware, adminController.getJobReport)
+
 
 
 export default adminRoute

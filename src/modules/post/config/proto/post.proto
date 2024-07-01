@@ -12,6 +12,7 @@ service PostServices {
    rpc GetUserPost(UserId) returns (GetPostResponse){};
    rpc DeletePost(deleteComment) returns (PostResponse){};
    rpc EditPost(updatePostRequest) returns (PostResponse){};
+   rpc GetReports(Empty) returns (GetPostStatsResponse){};
    }
 
 message Empty {
@@ -104,3 +105,12 @@ message UserId {
   string userId = 1;
 }
 
+message MonthStats {
+    int32 month = 1;
+    int32 count = 2;
+}
+
+message GetPostStatsResponse {
+    repeated MonthStats result = 1;
+    string count = 2;
+}

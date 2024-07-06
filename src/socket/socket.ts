@@ -80,7 +80,7 @@ const setupSocket = async (server: HTTPServer): Promise<SocketIOServer> => {
             }
             channel.publish(exchange, routingKey, Buffer.from(JSON.stringify(data)));
             io.emit('message', newMessage);
-            io.emit("sortChatlist", newMessage.chatId);
+            io.emit("sortChatlist", newMessage);
         });
 
         socket.on('callUser', ({ userToCall, from, offer, fromId }) => {
@@ -102,14 +102,18 @@ const setupSocket = async (server: HTTPServer): Promise<SocketIOServer> => {
         });
 
         socket.on('callAccepted', ({ userId, answer, context }) => {
-            if (context === 'webRTC') {
+            if (context
+                == 'webRTC') {
                 const userSocketId = onlineUsers.get(userId) || ''
                 console.log('----------');
                 console.log(`Sending call accepted signal to ${userId}${userSocketId}`);
                 io.to(userSocketId).emit('callAcceptedSignal', { answer });
             }
         });
-
+        socket.on('callEnded', (guestId) => {
+            let userSocketId = onlineUsers.get(guestId) || ''
+            io.to(userSocketId).emit('callEndedSignal');
+        })
     });
 
     const broadcastOnlineUsers = () => {

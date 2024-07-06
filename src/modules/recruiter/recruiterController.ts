@@ -7,13 +7,11 @@ dotenv.config();
 export const recruiterController = {
   register: (req: Request, res: Response, next: NextFunction) => {
     try {
-      console.log("came apiweqdqe gateway", req.body);
       RecruiterClient.Register(req.body, (err: Error | null, result: any) => {
         if (err) {
           console.error("Error:", err);
           return res.status(500).json({ error: 'Internal Server Error' });
         }
-        console.log("Response from UserClient:", result);
         const isRecruiter = true;
         res.cookie('isRecruiter', isRecruiter);
         res.cookie('otp', result.otp, { httpOnly: true });
@@ -30,7 +28,7 @@ export const recruiterController = {
   },
   otp: (req: Request, res: Response, next: NextFunction) => {
     try {
-      console.log('came otp', req.body);
+
       console.log(req.cookies.otp, req.cookies.userdata, 'coookiw');
       const otpFromCookie = req.cookies.otp;
       const userdataFromCookie = JSON.parse(req.cookies.userdata);
@@ -40,7 +38,6 @@ export const recruiterController = {
           console.error("Error:", err);
           return res.status(500).json({ error: 'Internal Server Error' });
         }
-        console.log("Response from UserClient:", result);
         const { username, email } = userdataFromCookie;
         if (!process.env.SECRET_KEY) {
           throw new Error('Secret key is not defined in environment variables');
@@ -48,7 +45,6 @@ export const recruiterController = {
         const token = jwt.sign({ username, email }, process.env.SECRET_KEY, { expiresIn: '1h' })
         const expirationDate = new Date();
         expirationDate.setTime(expirationDate.getTime() + 60 * 60 * 1000);
-        console.log('token', token);
         res.clearCookie('otp');
         res.cookie('token', token, { expires: expirationDate })
         let role = 'recruiter'
@@ -63,7 +59,6 @@ export const recruiterController = {
   },
   login: (req: Request, res: Response, next: NextFunction) => {
     try {
-      console.log('came otp', req.body);
       RecruiterClient.Login(req.body, (err: Error | null, result: any) => {
         if (err) {
           console.error("Error:", err);
@@ -77,7 +72,6 @@ export const recruiterController = {
           }
           const { _id } = result.user
           const token = jwt.sign({ email, userId: _id }, process.env.SECRET_KEY, { expiresIn: '3h' })
-          console.log('token', token);
           res.clearCookie('userdata');
           const expirationDate = new Date();
           expirationDate.setTime(expirationDate.getTime() + 60 * 60 * 1000);

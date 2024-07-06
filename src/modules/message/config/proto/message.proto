@@ -28,6 +28,7 @@ message Chat {
     string _id = 1;
     repeated string participants = 2;
     string updatedAt = 3;
+    LastMessage lastMessage = 4;
 }
 
 message RequestMessage {
@@ -44,4 +45,15 @@ message ChatsMessage {
 
 message ResponseChatMessage {
     repeated ChatsMessage chats = 1;
+}
+
+message LastMessage {
+    string _id = 1;
+    string chat = 2;
+    string sender = 3;
+    string message = 4;
+    string filePath = 5;
+    string fileType = 6;
+    string createdAt = 7;
+    string updatedAt = 8;
 }

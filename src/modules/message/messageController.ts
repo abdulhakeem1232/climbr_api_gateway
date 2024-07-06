@@ -44,17 +44,16 @@ export const messageController = {
                     console.error("Error: ", err);
                     return res.status(500).json({ error: 'Internal Server Error' });
                 }
-                console.log('res00000000000', result);
+                console.log(result, '------------------------------');
+
                 const filteredChats = result.chatlist.map((chat: any) => {
                     const otherParticipant = chat.participants.find((participant: string) => participant !== userId);
-                    return { _id: chat._id, updatedAt: chat.updatedAt, otherParticipant };
+                    return { _id: chat._id, updatedAt: chat.updatedAt, otherParticipant, lastMessage: chat.lastMessage };
                 });
 
                 const userData = await Promise.all(
                     filteredChats.map((otherParticipant: any) => {
                         return new Promise((resolve, reject) => {
-                            console.log(otherParticipant, '-------');
-
                             UserClient.GetUserData({ userId: otherParticipant.otherParticipant }, (err: Error | null, user: any) => {
                                 if (err) {
                                     console.error("Error fetching user data: ", err);
@@ -69,7 +68,8 @@ export const messageController = {
                 const response = filteredChats.map((chat: any, index: number) => ({
                     _id: chat._id,
                     updatedAt: chat.updatedAt,
-                    user: userData[index]
+                    user: userData[index],
+                    lastMessage: chat.lastMessage
                 }));
                 return res.json(response);
             });
@@ -96,7 +96,6 @@ export const messageController = {
     },
     sendMessages: async (req: Request, res: Response, next: NextFunction) => {
         try {
-            console.log(req.body, req.file);
             const name = randomImageName()
             const params = {
                 Bucket: bucket_name,
@@ -108,7 +107,6 @@ export const messageController = {
             await s3.send(command);
             const fileType = req.file?.mimetype;
             const filePath = name;
-            console.log('stored in s3');
             return res.json({ fileType, filePath });
         } catch (error) {
             console.error("Error during sending message:", error);

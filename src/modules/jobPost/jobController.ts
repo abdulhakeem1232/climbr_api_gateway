@@ -4,7 +4,7 @@ import { UserClient } from "../user/config/grpcClient/userClient";
 
 
 export const jobController = {
-    createJob: (req: Request, res: Response, next: NextFunction) => {
+    createJob: (req: Request, res: Response) => {
         try {
             const buffer = req.file?.buffer
             const fileDetails = {
@@ -31,8 +31,6 @@ export const jobController = {
     getJob: (req: Request, res: Response) => {
         try {
             const userId = req.params.userId
-            console.log(userId);
-
             JobClient.GetJob({ userId }, (err: Error | null, result: any) => {
                 if (err) {
                     console.error("Error:", err);
@@ -76,10 +74,8 @@ export const jobController = {
     },
     applyJob: (req: Request, res: Response) => {
         try {
-            console.log(req.body, 'll');
             const { jobid, userid } = req.body
             const status = 'Applied'
-            console.log(req.file?.buffer);
             const buffer = req.file?.buffer
             const fileDetails = {
                 originalname: req.file?.originalname,
@@ -109,10 +105,7 @@ export const jobController = {
     },
     deleteJob: (req: Request, res: Response) => {
         try {
-            console.log('delete job');
             const postId = req.body.postId
-            console.log(postId, '---==--=--');
-
             JobClient.DeleteJob({ postId }, (err: Error | null, result: any) => {
                 if (err) {
                     console.error("Error:", err);
@@ -127,10 +120,6 @@ export const jobController = {
     },
     updatejob: (req: Request, res: Response) => {
         try {
-            console.log('update job');
-
-            console.log(req.body, '---==--=--');
-
             JobClient.UpdateJob(req.body, (err: Error | null, result: any) => {
                 if (err) {
                     console.error("Error:", err);
@@ -157,4 +146,55 @@ export const jobController = {
             return res.status(500).json({ error: 'Internal Server Error' });
         }
     },
-}
+    getApplicantsChart: (req: Request, res: Response) => {
+        try {
+            const { userId } = req.params
+            JobClient.GetApplicantsReports({ userId }, (err: Error | null, result: any) => {
+                if (err) {
+                    console.error("Error:", err);
+                    return res.status(500).json({ error: 'Internal Server Error' });
+                }
+                return res.json(result);
+            });
+        } catch (error) {
+            console.error("Error during updating job:", error);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
+    getApplicants: (req: Request, res: Response) => {
+        try {
+            const id = req.params.jobId
+            JobClient.GetApplicants({ id }, (err: Error | null, result: any) => {
+                if (err) {
+                    console.error("Error:", err);
+                    return res.status(500).json({ error: 'Internal Server Error' });
+                }
+                return res.json(result);
+            });
+        } catch (error) {
+            console.error("Error during updating job:", error);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
+    updateStatus: (req: Request, res: Response) => {
+        try {
+            const { jobId, userId, status } = req.body
+            JobClient.ChangeStatus({ jobId, userId, status }, (err: Error | null, result: any) => {
+                if (err) {
+                    console.error("Error:", err);
+                    return res.status(500).json({ error: 'Internal Server Error' });
+                }
+                UserClient.updateJobStatus({ jobId, userId, status }, (err: Error | null, result: any) => {
+                    if (err) {
+                        console.error("Error:", err);
+                        return res.status(500).json({ error: 'Internal Server Error' });
+                    }
+                    return res.json(result);
+                })
+            });
+        } catch (error) {
+            console.error("Error during updating job:", error);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
+} 

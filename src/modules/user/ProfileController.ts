@@ -4,8 +4,6 @@ import { UserClient } from "./config/grpcClient/userClient";
 export const profileController = {
     coverPhoto: (req: Request, res: Response, next: NextFunction) => {
         try {
-            console.log(req.body, '-----------');
-
             const { id } = req.params
             const image = {
                 originalname: req.file?.originalname,
@@ -173,7 +171,6 @@ export const profileController = {
                 if (err) {
                     return res.status(500).json({ error: 'Internal Server Error' });
                 }
-                console.log(result, 'in search');
                 return res.json(result);
             });
         } catch (error) {
@@ -188,7 +185,6 @@ export const profileController = {
                 if (err) {
                     return res.status(500).json({ error: 'Internal Server Error' });
                 }
-                console.log(result, 'in search');
                 return res.json(result);
             });
         } catch (error) {

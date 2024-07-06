@@ -15,7 +15,6 @@ export const PostController = {
         try {
             const { description } = req.body;
             const token = req.cookies.token
-            console.log(token);
             let email, userId
             if (process.env.SECRET_KEY) {
                 const decoded = jwt.verify(token, process.env.SECRET_KEY) as JwtPayload;
@@ -45,7 +44,6 @@ export const PostController = {
     getallpost: (req: Request, res: Response, next: NextFunction) => {
 
         let { page, limit } = req.query;
-        console.log('-0-0-0-0-0', page, limit);
         PostClient.GetAllPost({ page: page, limit: limit }, async (err: Error | null, result: any) => {
             if (err) {
                 console.error("Error: ", err);
@@ -86,15 +84,12 @@ export const PostController = {
 
                 return res.json(result);
             } catch (error) {
-                console.log('errorhereeeee', error);
-
                 return res.status(500).json({ error: 'Internal Server Error' });
             }
         });
     },
     like: (req: Request, res: Response, next: NextFunction) => {
         try {
-            console.log('like--', req.body);
             const { userId, postId } = req.body
             PostClient.PostLike({ userId, postId }, (err: Error | null, result: any) => {
                 if (err) {
@@ -110,7 +105,6 @@ export const PostController = {
     },
     dislike: (req: Request, res: Response, next: NextFunction) => {
         try {
-            console.log('like--', req.body);
             const { userId, postId } = req.body
             PostClient.PostDisLike({ userId, postId }, (err: Error | null, result: any) => {
                 if (err) {
@@ -126,14 +120,12 @@ export const PostController = {
     },
     comment: (req: Request, res: Response, next: NextFunction) => {
         try {
-            console.log('comment--', req.body);
             const { userId, postId, comment } = req.body
             PostClient.PostComment({ userId, postId, comment }, (err: Error | null, result: any) => {
                 if (err) {
                     console.error("Error: ", err);
                     return res.status(500).json({ error: 'Internal Server Error' });
                 }
-                console.log('cpmment op', result);
                 return res.json(result);
             });
         } catch (error) {
@@ -143,8 +135,6 @@ export const PostController = {
     },
     deletComment: (req: Request, res: Response, next: NextFunction) => {
         try {
-            console.log(req.body);
-
             const { postId, commentId } = req.body
             PostClient.DeleteComment({ postId, commentId }, (err: Error | null, result: any) => {
                 if (err) {
@@ -160,8 +150,6 @@ export const PostController = {
     },
     reportPost: (req: Request, res: Response, next: NextFunction) => {
         try {
-            console.log(req.body);
-
             const { postId, reason, userId } = req.body
             PostClient.ReportPost({ postId, reason, userId }, (err: Error | null, result: any) => {
                 if (err) {
@@ -177,8 +165,6 @@ export const PostController = {
     },
     delete: (req: Request, res: Response, next: NextFunction) => {
         try {
-            console.log(req.body);
-
             const { postId } = req.body
             PostClient.DeletePost({ postId }, (err: Error | null, result: any) => {
                 if (err) {
@@ -194,10 +180,8 @@ export const PostController = {
     },
     editPost: (req: Request, res: Response, next: NextFunction) => {
         try {
-
             const { id } = req.params
             const { description } = req.body
-            console.log(id, description, 'edit post ',);
             PostClient.EditPost({ postId: id, description: description }, (err: Error | null, result: any) => {
                 if (err) {
                     console.error("Error: ", err);

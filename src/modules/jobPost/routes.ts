@@ -18,7 +18,10 @@ jobRoute.get('/singlejob/:id', authMiddleware, jobController.getsingleJob);
 jobRoute.post('/applyjob', authMiddleware, upload.single("cv"), jobController.applyJob);
 jobRoute.delete('/deletejob', authMiddleware, jobController.deleteJob);
 jobRoute.post('/updatejob', authMiddleware, jobController.updatejob);
-jobRoute.post('/searchjob', authMiddleware, jobController.searchJob)
+jobRoute.post('/searchjob', authMiddleware, jobController.searchJob);
+jobRoute.get('/applicantChart/:userId', authMiddleware, jobController.getApplicantsChart);
+jobRoute.get('/getApplicant/:jobId', authMiddleware, jobController.getApplicants);
+jobRoute.post('/applicantStatus', authMiddleware, jobController.updateStatus)
 
 
 

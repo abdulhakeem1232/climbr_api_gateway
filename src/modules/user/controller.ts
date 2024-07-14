@@ -73,6 +73,7 @@ export const UserController = {
     try {
       UserClient.Login(req.body, (err: Error | null, result: any) => {
         if (err) {
+          console.log(err, 'error while login');
           return res.status(500).json({ error: 'Internal Server Error' });
         }
         if (result.success) {
@@ -89,6 +90,8 @@ export const UserController = {
           let role = user.isAdmin ? 'admin' : 'user'
           res.cookie('role', role, { expires: expirationDate })
         }
+        console.log(result, '===================');
+
         return res.json(result);
       })
     } catch (error) {
@@ -107,14 +110,16 @@ export const UserController = {
           if (!process.env.SECRET_KEY) {
             throw new Error('Secret key is not defined in environment variables');
           }
-          const { id, email } = result.user
-          const token = jwt.sign({ email: email, userId: id }, process.env.SECRET_KEY, { expiresIn: '1h' })
+          const { _id, email } = result.user
+          const token = jwt.sign({ email: email, userId: _id }, process.env.SECRET_KEY, { expiresIn: '2h' })
           const expirationDate = new Date();
           expirationDate.setTime(expirationDate.getTime() + 60 * 60 * 1000);
           const role = 'user'
           res.cookie('token', token, { expires: expirationDate });
           res.cookie('role', role, { expires: expirationDate })
         }
+        console.log(result, 'google===================================');
+
         return res.json(result);
       })
     } catch (error) {

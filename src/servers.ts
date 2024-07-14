@@ -11,6 +11,7 @@ import adminRoute from "./modules/admin/routes";
 import messageRoute from "./modules/message/routes";
 import { createServer } from "http";
 import setupSocket from "./socket/socket";
+import logger from 'morgan'
 
 dotenv.config();
 
@@ -25,6 +26,7 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use(logger('dev'))
 app.use("/", userRoute);
 app.use("/recruiter/job", jobRoute)
 app.use("/recruiter", recruiterRoute);
@@ -38,6 +40,15 @@ setupSocket(server).then(io => {
   console.log('Socket.io is set up.');
 });
 
-server.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+console.log(`NODE_ENV: ${process.env.NODE_ENV}`);
+console.log(`Message Service Domain: ${process.env.PRO_DOMAIN_MESSAGE}`);
+console.log(`Message Service Port: ${process.env.MESSAGE_PORT}`);
+console.log(`Message Service Domain: ${process.env.PRO_DOMAIN_JOB}`);
+console.log(`Message Service Port: ${process.env.JOB_PORT}`);
+console.log(`Message Service Domain: ${process.env.PRO_DOMAIN_USER}`);
+console.log(`Message Service Port: ${process.env.USER_PORT}`);
+
+server.listen(8080, '0.0.0.0', () => {
+  console.log(`Server is running on http://localhost:8080`);
 });
+

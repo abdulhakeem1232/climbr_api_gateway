@@ -2,7 +2,8 @@ import { Server as SocketIOServer } from 'socket.io';
 import { Server as HTTPServer } from 'http';
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import amqp from 'amqplib';
+// import amqp from 'amqplib';
+import messageRabbitclinet from '../rabbitmq/client';
 
 const access_key = process.env.ACCESS_KEY
 const secret_access_key = process.env.SECRET_ACCESS_KEY
@@ -28,13 +29,13 @@ const setupSocket = async (server: HTTPServer): Promise<SocketIOServer> => {
         }
     });
 
-    const connection = await amqp.connect('amqp://localhost');
-    const channel = await connection.createChannel();
+    // const connection = await amqp.connect('amqp://rabbitmq:5672');
+    // const channel = await connection.createChannel();
 
-    const exchange = 'direct_exchange';
-    const routingKey = 'message_routing_key';
+    // const exchange = 'direct_exchange';
+    // const routingKey = 'message_routing_key';
 
-    await channel.assertExchange(exchange, 'direct', { durable: true });
+    // await channel.assertExchange(exchange, 'direct', { durable: true });
 
     const onlineUsers = new Map<string, string>();
 
@@ -78,7 +79,8 @@ const setupSocket = async (server: HTTPServer): Promise<SocketIOServer> => {
                 const url = await getSignedUrl(s3, getObjectCommand, { expiresIn: 3600 });
                 newMessage.filePath = url
             }
-            channel.publish(exchange, routingKey, Buffer.from(JSON.stringify(data)));
+            // channel.publish(exchange, routingKey, Buffer.from(JSON.stringify(data)));
+            const response = await messageRabbitclinet.produce(data, 'chat')
             io.emit('message', newMessage);
             io.emit("sortChatlist", newMessage);
         });

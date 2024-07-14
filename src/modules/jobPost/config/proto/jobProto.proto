@@ -115,6 +115,7 @@ message Applicant {
 
 message ApplicantResponse {
     bool success = 1;
+    string status = 2;
 }
 
 message DeleteJobRequest {

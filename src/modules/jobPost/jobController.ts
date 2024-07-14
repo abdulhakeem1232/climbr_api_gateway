@@ -74,26 +74,28 @@ export const jobController = {
     },
     applyJob: (req: Request, res: Response) => {
         try {
-            const { jobid, userid } = req.body
-            const status = 'Applied'
-            const buffer = req.file?.buffer
+            const { jobid, userid } = req.body;
+            const buffer = req.file?.buffer;
             const fileDetails = {
                 originalname: req.file?.originalname,
                 encoding: req.file?.encoding,
                 mimetype: req.file?.mimetype,
                 buffer: req.file?.buffer,
                 size: req.file?.size
-            }
+            };
             req.body.cv = fileDetails;
-            UserClient.UpdateJobStatus({ jobid, userid, status }, (updateErr: Error | null, updateResult: any) => {
-                if (updateErr) {
-                    console.error("Error updating job status:", updateErr);
-                    return res.status(500).json({ error: 'Error updating job status' });
+
+            JobClient.ApplyJob(req.body, (applyErr: Error | null, applyResult: any) => {
+                if (applyErr) {
+                    console.error("Error applying for job:", applyErr);
+                    return res.status(500).json({ error: 'Internal Server Error' });
                 }
-                JobClient.ApplyJob(req.body, (applyErr: Error | null, applyResult: any) => {
-                    if (applyErr) {
-                        console.error("Error:", applyErr);
-                        return res.status(500).json({ error: 'Internal Server Error' });
+                const status = applyResult.status
+
+                UserClient.UpdateJobStatus({ jobid, userid, status }, (updateErr: Error | null, updateResult: any) => {
+                    if (updateErr) {
+                        console.error("Error updating job status:", updateErr);
+                        return res.status(500).json({ error: 'Error updating job status' });
                     }
                     return res.json({ message: 'Job applied successfully and status updated' });
                 });
@@ -103,6 +105,7 @@ export const jobController = {
             return res.status(500).json({ error: 'Internal Server Error' });
         }
     },
+
     deleteJob: (req: Request, res: Response) => {
         try {
             const postId = req.body.postId

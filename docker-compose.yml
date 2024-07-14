@@ -1,0 +1,75 @@
+version: '3.8'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - climbr_network
+
+  api-gateway:
+    image: api-gateway:latest
+    build:
+      context: .
+    ports:
+      - "${PORT}:${PORT}"
+    env_file:
+      - .env
+    networks:
+      - climbr_network
+    depends_on:
+      - rabbitmq
+
+  user-service:
+    image: user-service:latest
+    ports:
+      - "${USER_PORT}:${USER_PORT}"
+    env_file:
+      - .env
+    networks:
+      - climbr_network
+
+  recruiter-service:
+    image: recruiter-service:latest
+    ports:
+      - "${RECRUITER_PORT}:${RECRUITER_PORT}"
+    env_file:
+      - .env
+    networks:
+      - climbr_network
+
+  post-service:
+    image: post-service:latest
+    ports:
+      - "${POST_PORT}:${POST_PORT}"
+    env_file:
+      - .env
+    networks:
+      - climbr_network
+
+  jobpost-service:
+    image: jobpost-service:latest
+    ports:
+      - "${JOB_PORT}:${JOB_PORT}"
+    env_file:
+      - .env
+    networks:
+      - climbr_network
+
+  message-service:
+    image: message-service:latest
+    ports:
+      - "${MESSAGE_PORT}:${MESSAGE_PORT}"
+    env_file:
+      - .env
+    networks:
+      - climbr_network
+    depends_on:
+      - rabbitmq
+
+networks:
+  climbr_network:
+    driver: bridge

@@ -19,9 +19,10 @@ const MessageServices = messageProto.MessageServices as grpc.ServiceClientConstr
 
 
 const MESSAGE_PORT = process.env.MESSAGE_PORT
+const Domain = process.env.NODE_ENV === 'dev' ? "0.0.0.0" : process.env.PRO_DOMAIN_MESSAGE
 
 const MessageClient = new MessageServices(
-    `0.0.0.0:${MESSAGE_PORT}`,
+    `${Domain}:${MESSAGE_PORT}`,
     grpc.credentials.createInsecure()
 );
 

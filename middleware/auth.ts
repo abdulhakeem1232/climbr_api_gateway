@@ -7,6 +7,8 @@ const secretKey = process.env.SECRET_KEY
 
 const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const token = req.cookies.token;
+    console.log(token, '-----');
+
     if (!token) {
         console.log('notoken');
         return res.status(401).json({ message: 'Unauthorized: Token not provided' });
@@ -29,6 +31,8 @@ const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
             if (status) {
                 next();
             } else {
+                console.log(status, 'handle response goo');
+
                 return res.status(401).json({ message: 'Unauthorized: User/Recruiter is inactive' });
             }
         };
@@ -38,6 +42,8 @@ const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
                     console.error("Error: ", err);
                     return res.status(500).json({ error: 'Internal Server Error' });
                 }
+                console.log(result, '=============++++++++++++++');
+
                 handleResponse(result.status);
 
             });

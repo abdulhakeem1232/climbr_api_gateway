@@ -12,8 +12,9 @@ const jobProto = grpc.loadPackageDefinition(packageDefinition) as any;
 
 const JobServices = jobProto.JobServices as grpc.ServiceClientConstructor;
 
+const Domain = process.env.NODE_ENV === 'dev' ? "0.0.0.0" : process.env.PRO_DOMAIN_JOB
 const JobClient = new JobServices(
-    `0.0.0.0:${process.env.JOB_PORT}`,
+    `${Domain}:${process.env.JOB_PORT}`,
     grpc.credentials.createInsecure()
 );
 

@@ -11,9 +11,10 @@ const packageDefinition = protoLoader.loadSync(
 const recruiterProto = grpc.loadPackageDefinition(packageDefinition) as any;
 
 const RecuiterServices = recruiterProto.RecuiterServices as grpc.ServiceClientConstructor;
+const Domain = process.env.NODE_ENV === 'dev' ? "0.0.0.0" : process.env.PRO_DOMAIN_RECRUITER
 
 const RecruiterClient = new RecuiterServices(
-  `0.0.0.0:${process.env.RECRUITER_PORT}`,
+  `${Domain}:${process.env.RECRUITER_PORT}`,
   grpc.credentials.createInsecure()
 );
 

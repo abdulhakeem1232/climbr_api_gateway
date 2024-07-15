@@ -54,6 +54,7 @@ export const UserController = {
             expires: expirationDate, httpOnly: true, secure: true, sameSite: 'none'
           })
           let role = 'user'
+          result.user.role = role
           res.cookie('role', role, { expires: expirationDate, secure: true, sameSite: 'none' })
           res.json(result);
         });
@@ -92,6 +93,7 @@ export const UserController = {
             expires: expirationDate, httpOnly: true, secure: true, sameSite: 'none'
           });
           let role = user.isAdmin ? 'admin' : 'user'
+          result.user.role = role
           res.cookie('role', role, { expires: expirationDate, secure: true, sameSite: 'none' })
         }
         console.log(result, '===================');

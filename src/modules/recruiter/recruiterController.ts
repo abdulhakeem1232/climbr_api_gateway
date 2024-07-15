@@ -46,10 +46,10 @@ export const recruiterController = {
         const expirationDate = new Date();
         expirationDate.setTime(expirationDate.getTime() + 60 * 60 * 1000);
         res.clearCookie('otp');
-        res.cookie('token', token, { expires: expirationDate })
+        res.cookie('token', token, { expires: expirationDate, httpOnly: true, secure: true, sameSite: 'none' })
         let role = 'recruiter'
-        res.cookie('role', role, { expires: expirationDate })
-
+        res.cookie('role', role, { expires: expirationDate, secure: true, sameSite: 'none' })
+        result.user.role = role
         res.json(result);
       });
     } catch (error) {
@@ -75,9 +75,10 @@ export const recruiterController = {
           res.clearCookie('userdata');
           const expirationDate = new Date();
           expirationDate.setTime(expirationDate.getTime() + 60 * 60 * 1000);
-          res.cookie('token', token, { expires: expirationDate });
+          res.cookie('token', token, { expires: expirationDate, httpOnly: true, secure: true, sameSite: 'none' });
           let role = 'recruiter'
-          res.cookie('role', role, { expires: expirationDate })
+          res.cookie('role', role, { expires: expirationDate, secure: true, sameSite: 'none' })
+          result.user.role = role
         }
         return res.json(result);
       })

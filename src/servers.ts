@@ -52,7 +52,7 @@ console.log(`Message Service Port: ${process.env.JOB_PORT}`);
 console.log(`Message Service Domain: ${process.env.PRO_DOMAIN_USER}`);
 console.log(`Message Service Port: ${process.env.USER_PORT}`);
 
-server.listen(8080, '0.0.0.0', () => {
+server.listen(port, () => {
   console.log(`Server is running on after success http://localhost:8080`);
 });
 

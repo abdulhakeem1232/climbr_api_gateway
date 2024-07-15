@@ -50,9 +50,11 @@ export const UserController = {
           const expirationDate = new Date();
           expirationDate.setTime(expirationDate.getTime() + 60 * 60 * 1000);
           res.clearCookie('otp');
-          res.cookie('token', token, { expires: expirationDate })
+          res.cookie('token', token, {
+            expires: expirationDate, httpOnly: true, secure: true, sameSite: 'none'
+          })
           let role = 'user'
-          res.cookie('role', role, { expires: expirationDate })
+          res.cookie('role', role, { expires: expirationDate, httpOnly: true, secure: true, sameSite: 'none' })
           res.json(result);
         });
       } else {
@@ -86,9 +88,9 @@ export const UserController = {
           const expirationDate = new Date();
           expirationDate.setTime(expirationDate.getTime() + 60 * 60 * 1000);
           res.clearCookie('userdata');
-          res.cookie('token', token, { expires: expirationDate });
+          res.cookie('token', token, { expires: expirationDate, httpOnly: true, secure: true, sameSite: 'none' });
           let role = user.isAdmin ? 'admin' : 'user'
-          res.cookie('role', role, { expires: expirationDate })
+          res.cookie('role', role, { expires: expirationDate, httpOnly: true, secure: true, sameSite: 'none' })
         }
         console.log(result, '===================');
 

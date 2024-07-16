@@ -27,6 +27,10 @@ const setupSocket = async (server: HTTPServer): Promise<SocketIOServer> => {
             origin: 'https://climbr.site',
             methods: ['GET', 'POST']
         }
+        // cors: {
+        //     origin: 'http://localhost:3000',
+        //     methods: ['GET', 'POST']
+        // }
     });
 
     // const connection = await amqp.connect('amqp://rabbitmq:5672');

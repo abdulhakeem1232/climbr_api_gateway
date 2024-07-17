@@ -108,8 +108,7 @@ const setupSocket = async (server: HTTPServer): Promise<SocketIOServer> => {
         });
 
         socket.on('callAccepted', ({ userId, answer, context }) => {
-            if (context
-                == 'webRTC') {
+            if (context == 'webRTC') {
                 const userSocketId = onlineUsers.get(userId) || ''
                 console.log('----------');
                 console.log(`Sending call accepted signal to ${userId}${userSocketId}`);

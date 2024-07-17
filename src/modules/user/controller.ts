@@ -15,12 +15,12 @@ export const UserController = {
           return res.status(500).json({ error: 'Internal Server Error' });
         }
         const isRecruiter = false;
-        res.cookie('isRecruiter', isRecruiter);
-        res.cookie('otp', result.otp, { httpOnly: true })
+        res.cookie('isRecruiter', isRecruiter, { httpOnly: true, secure: true, sameSite: 'none', domain: '.climbrserver.site' });
+        res.cookie('otp', result.otp, { httpOnly: true, secure: true, sameSite: 'none', domain: '.climbrserver.site' })
         console.log(result.otp, 'otp');
 
         if (typeof result.data === 'object' || Array.isArray(result.data)) {
-          res.cookie('userdata', JSON.stringify(result.data), { httpOnly: true });
+          res.cookie('userdata', JSON.stringify(result.data), { httpOnly: true, secure: true, sameSite: 'none', domain: '.climbrserver.site' });
         }
         return res.json(result);
       });
@@ -51,11 +51,11 @@ export const UserController = {
           expirationDate.setTime(expirationDate.getTime() + 60 * 60 * 1000);
           res.clearCookie('otp');
           res.cookie('token', token, {
-            expires: expirationDate, httpOnly: true, secure: true, sameSite: 'none'
+            expires: expirationDate, httpOnly: true, secure: true, sameSite: 'none', domain: '.climbrserver.site'
           })
           let role = 'user'
           result.user.role = role
-          res.cookie('role', role, { expires: expirationDate, secure: true, sameSite: 'none' })
+          res.cookie('role', role, { expires: expirationDate, secure: true, sameSite: 'none', domain: '.climbrserver.site' })
           res.json(result);
         });
       } else {
@@ -143,8 +143,8 @@ export const UserController = {
         }
         console.log("Response from UserClient:", result);
         if (result.success) {
-          res.cookie('email', req.body.email, {});
-          res.cookie('otp', result.otp, {});
+          res.cookie('email', req.body.email, { httpOnly: true, secure: true, sameSite: 'none', domain: '.climbrserver.site' });
+          res.cookie('otp', result.otp, { httpOnly: true, secure: true, sameSite: 'none', domain: '.climbrserver.site' });
         }
         return res.json(result);
       })
@@ -158,7 +158,6 @@ export const UserController = {
     try {
       const password = req.body.password;
       const email = req.cookies.email;
-
       UserClient.Passwordreset({ email: email, password: password }, (err: Error | null, result: any) => {
         if (err) {
           console.error("Error: ", err);
@@ -180,7 +179,7 @@ export const UserController = {
           console.error("Error: ", err);
           return res.status(500).json({ error: 'Internal Server Error' });
         }
-        res.cookie('otp', result.otp, { httpOnly: true })
+        res.cookie('otp', result.otp, { httpOnly: true, secure: true, sameSite: 'none', domain: '.climbrserver.site' })
         return res.json(result);
       })
     } catch (error) {

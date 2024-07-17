@@ -13,10 +13,10 @@ export const recruiterController = {
           return res.status(500).json({ error: 'Internal Server Error' });
         }
         const isRecruiter = true;
-        res.cookie('isRecruiter', isRecruiter);
-        res.cookie('otp', result.otp, { httpOnly: true });
+        res.cookie('isRecruiter', isRecruiter, { httpOnly: true, secure: true, sameSite: 'none', domain: '.climbrserver.site' });
+        res.cookie('otp', result.otp, { httpOnly: true, secure: true, sameSite: 'none', domain: '.climbrserver.site' });
         if (typeof result.data === 'object' || Array.isArray(result.data)) {
-          res.cookie('userdata', JSON.stringify(result.data), { httpOnly: true });
+          res.cookie('userdata', JSON.stringify(result.data), { httpOnly: true, secure: true, sameSite: 'none', domain: '.climbrserver.site' });
         }
 
         return res.json(result);
@@ -46,9 +46,9 @@ export const recruiterController = {
         const expirationDate = new Date();
         expirationDate.setTime(expirationDate.getTime() + 60 * 60 * 1000);
         res.clearCookie('otp');
-        res.cookie('token', token, { expires: expirationDate, httpOnly: true, secure: true, sameSite: 'none' })
+        res.cookie('token', token, { expires: expirationDate, httpOnly: true, secure: true, sameSite: 'none', domain: '.climbrserver.site' })
         let role = 'recruiter'
-        res.cookie('role', role, { expires: expirationDate, secure: true, sameSite: 'none' })
+        res.cookie('role', role, { expires: expirationDate, httpOnly: true, secure: true, sameSite: 'none', domain: '.climbrserver.site' })
         result.user.role = role
         res.json(result);
       });
@@ -75,9 +75,9 @@ export const recruiterController = {
           res.clearCookie('userdata');
           const expirationDate = new Date();
           expirationDate.setTime(expirationDate.getTime() + 60 * 60 * 1000);
-          res.cookie('token', token, { expires: expirationDate, httpOnly: true, secure: true, sameSite: 'none' });
+          res.cookie('token', token, { expires: expirationDate, httpOnly: true, secure: true, sameSite: 'none', domain: '.climbrserver.site' });
           let role = 'recruiter'
-          res.cookie('role', role, { expires: expirationDate, secure: true, sameSite: 'none' })
+          res.cookie('role', role, { expires: expirationDate, httpOnly: true, secure: true, sameSite: 'none', domain: '.climbrserver.site' })
           result.user.role = role
         }
         return res.json(result);

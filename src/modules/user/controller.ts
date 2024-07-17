@@ -121,8 +121,8 @@ export const UserController = {
           const expirationDate = new Date();
           expirationDate.setTime(expirationDate.getTime() + 60 * 60 * 1000);
           const role = 'user'
-          res.cookie('token', token, { expires: expirationDate });
-          res.cookie('role', role, { expires: expirationDate })
+          res.cookie('token', token, { expires: expirationDate, httpOnly: true, secure: true, sameSite: 'none', domain: '.climbrserver.site' });
+          res.cookie('role', role, { expires: expirationDate, secure: true, sameSite: 'none', domain: '.climbrserver.site' })
         }
         console.log(result, 'google===================================');
         result.user.role = 'user'

@@ -17,6 +17,12 @@ adminRoute.get('/userReport', authMiddleware, adminController.getUserReport)
 adminRoute.get('/recruiterReport', authMiddleware, adminController.getRecruiterReport)
 adminRoute.get('/postReport', authMiddleware, adminController.getPostReport)
 adminRoute.get('/jobReport', authMiddleware, adminController.getJobReport)
+adminRoute.get('/getallskills', authMiddleware, adminController.getskills)
+adminRoute.post('/addskill', authMiddleware, adminController.addskills)
+adminRoute.put('/updateskill', authMiddleware, adminController.updateskill)
+adminRoute.delete('/deleteskill/:_id', authMiddleware, adminController.deleteskill)
+
+
 
 
 

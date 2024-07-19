@@ -23,14 +23,14 @@ const s3: S3Client = new S3Client({
 
 const setupSocket = async (server: HTTPServer): Promise<SocketIOServer> => {
     const io = new SocketIOServer(server, {
-        cors: {
-            origin: 'https://climbr.site',
-            methods: ['GET', 'POST']
-        }
         // cors: {
-        //     origin: 'http://localhost:3000',
+        //     origin: 'https://climbr.site',
         //     methods: ['GET', 'POST']
         // }
+        cors: {
+            origin: 'http://localhost:3000',
+            methods: ['GET', 'POST']
+        }
     });
 
     // const connection = await amqp.connect('amqp://rabbitmq:5672');

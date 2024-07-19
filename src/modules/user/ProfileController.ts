@@ -192,5 +192,18 @@ export const profileController = {
             return res.status(500).json({ error: 'Internal Server Error' });
         }
     },
+    getSkills: (req: Request, res: Response, next: NextFunction) => {
+        try {
 
+            UserClient.Getskills({}, (err: Error | null, result: any) => {
+                if (err) {
+                    return res.status(500).json({ error: 'Internal Server Error' });
+                }
+                return res.json(result);
+            });
+        } catch (error) {
+            console.error("Error during Searching User:", error);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
 }

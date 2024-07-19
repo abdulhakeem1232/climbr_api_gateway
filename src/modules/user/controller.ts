@@ -90,11 +90,11 @@ export const UserController = {
           expirationDate.setTime(expirationDate.getTime() + 60 * 60 * 1000);
           res.clearCookie('userdata');
           res.cookie('token', token, {
-            expires: expirationDate, httpOnly: true, secure: true, sameSite: 'none', domain: '.climbrserver.site'
+            expires: expirationDate, httpOnly: true, secure: true, sameSite: 'none',
           });
           let role = user.isAdmin ? 'admin' : 'user'
           result.user.role = role
-          res.cookie('role', role, { expires: expirationDate, secure: true, sameSite: 'none', domain: '.climbrserver.site' })
+          res.cookie('role', role, { expires: expirationDate, secure: true, sameSite: 'none', })
         }
         console.log(result, '===================');
 

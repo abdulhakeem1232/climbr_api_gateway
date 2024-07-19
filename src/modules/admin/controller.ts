@@ -178,7 +178,8 @@ export const adminController = {
             console.error("Error during post status:", error);
             return res.status(500).json({ error: 'Internal Server Error' });
         }
-    }, getJobReport: (req: Request, res: Response, next: NextFunction) => {
+    },
+    getJobReport: (req: Request, res: Response, next: NextFunction) => {
         try {
             JobClient.GetReports({}, (err: Error | null, result: any) => {
                 if (err) {
@@ -188,7 +189,67 @@ export const adminController = {
                 return res.json(result);
             })
         } catch (error) {
-            console.error("Error during job status:", error);
+            console.error("Error during job report:", error);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
+    getskills: (req: Request, res: Response, next: NextFunction) => {
+        try {
+            UserClient.Getskills({}, (err: Error | null, result: any) => {
+                if (err) {
+                    console.error("Error: ", err);
+                    return res.status(500).json({ error: 'Internal Server Error' });
+                }
+                return res.json(result);
+            })
+        } catch (error) {
+            console.error("Error during getting skills:", error);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
+    addskills: (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { skill } = req.body
+            UserClient.AddSkill(req.body, (err: Error | null, result: any) => {
+                if (err) {
+                    console.error("Error: ", err);
+                    return res.status(500).json({ error: 'Internal Server Error' });
+                }
+                return res.json(result);
+            })
+        } catch (error) {
+            console.error("Error during adding skills:", error);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
+    updateskill: (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { skill } = req.body
+            UserClient.UpdateSkill(req.body, (err: Error | null, result: any) => {
+                if (err) {
+                    console.error("Error: ", err);
+                    return res.status(500).json({ error: 'Internal Server Error' });
+                }
+
+                return res.json(result);
+            })
+        } catch (error) {
+            console.error("Error during update skills:", error);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
+    deleteskill: (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const _id = req.params._id
+            UserClient.DeleteSkill({ _id }, (err: Error | null, result: any) => {
+                if (err) {
+                    console.error("Error: ", err);
+                    return res.status(500).json({ error: 'Internal Server Error' });
+                }
+                return res.json(result);
+            })
+        } catch (error) {
+            console.error("Error during jdelete skills:", error);
             return res.status(500).json({ error: 'Internal Server Error' });
         }
     },

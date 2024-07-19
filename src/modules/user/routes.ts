@@ -32,6 +32,10 @@ userRoute.get('/follow/:userId/:guestId', authMiddleware, profileController.foll
 userRoute.get('/unfollow/:userId/:guestId', authMiddleware, profileController.unfollow)
 userRoute.get('/SearchUser', authMiddleware, profileController.searchUser)
 userRoute.get('/suggestion/:userId', authMiddleware, profileController.suggestion)
+userRoute.get('/getSkills', authMiddleware, profileController.getSkills)
+
+
+
 
 
 

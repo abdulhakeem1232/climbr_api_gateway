@@ -54,6 +54,7 @@ export const UserController = {
             expires: expirationDate, httpOnly: true, secure: true, sameSite: 'none', domain: '.climbrserver.site'
           })
           let role = 'user'
+          console.log(result, '--------------');
           result.user.role = role
           res.cookie('role', role, { expires: expirationDate, secure: true, sameSite: 'none', domain: '.climbrserver.site' })
           res.json(result);

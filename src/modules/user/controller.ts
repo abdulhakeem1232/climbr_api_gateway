@@ -56,6 +56,8 @@ export const UserController = {
           let role = 'user'
           console.log(result, '--------------');
           result.userdata.role = role
+          console.log(result, '0000000000--------------');
+
           res.cookie('role', role, { expires: expirationDate, secure: true, sameSite: 'none', domain: '.climbrserver.site' })
           res.json(result);
         });

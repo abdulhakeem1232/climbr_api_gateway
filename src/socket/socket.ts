@@ -25,7 +25,7 @@ const setupSocket = async (server: HTTPServer): Promise<SocketIOServer> => {
     const io = new SocketIOServer(server, {
         cors: {
             origin: 'https://climbr.site',
-            methods: ['GET', 'POST']
+            credentials: true
         }
         // cors: {
         //     origin: 'http://localhost:3000',

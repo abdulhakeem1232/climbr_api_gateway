@@ -4,6 +4,7 @@ import { PostClient } from "../post/config/grpcClient/postClient";
 import { JobClient } from '../jobPost/config/grpcClient/jobClients'
 import * as dotenv from 'dotenv';
 import jwt, { VerifyErrors } from 'jsonwebtoken';
+import { token } from "morgan";
 
 dotenv.config();
 export const UserController = {
@@ -54,6 +55,7 @@ export const UserController = {
             expires: expirationDate, httpOnly: true, secure: true, sameSite: 'none', domain: '.climbrserver.site'
           })
           let role = 'user'
+          result.token = token
           console.log(result, '--------------');
           result.userdata.role = role
           console.log(result, '0000000000--------------');
@@ -96,6 +98,7 @@ export const UserController = {
             expires: expirationDate, httpOnly: true, secure: true, sameSite: 'none',
           });
           let role = user.isAdmin ? 'admin' : 'user'
+          result.token = token
           result.user.role = role
           res.cookie('role', role, { expires: expirationDate, secure: true, sameSite: 'none', })
         }
@@ -129,6 +132,7 @@ export const UserController = {
         }
         console.log(result, 'google===================================');
         result.user.role = 'user'
+        result.token = token
         return res.json(result);
       })
     } catch (error) {

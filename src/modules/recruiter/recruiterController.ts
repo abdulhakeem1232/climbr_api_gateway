@@ -50,6 +50,7 @@ export const recruiterController = {
         let role = 'recruiter'
         res.cookie('role', role, { expires: expirationDate, httpOnly: true, secure: true, sameSite: 'none', domain: '.climbrserver.site' })
         result.user.role = role
+        result.token = token
         res.json(result);
       });
     } catch (error) {
@@ -79,6 +80,7 @@ export const recruiterController = {
           let role = 'recruiter'
           res.cookie('role', role, { expires: expirationDate, httpOnly: true, secure: true, sameSite: 'none', domain: '.climbrserver.site' })
           result.user.role = role
+          result.token = token
         }
         return res.json(result);
       })

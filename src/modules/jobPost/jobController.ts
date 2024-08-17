@@ -91,7 +91,9 @@ export const jobController = {
                     return res.status(500).json({ error: 'Internal Server Error' });
                 }
                 const status = applyResult.status
-
+                if (status == 'Applicant has already applied for this job.') {
+                    return res.json({ message: 'Applicant has already applied for this job.' });
+                }
                 UserClient.UpdateJobStatus({ jobid, userid, status }, (updateErr: Error | null, updateResult: any) => {
                     if (updateErr) {
                         console.error("Error updating job status:", updateErr);

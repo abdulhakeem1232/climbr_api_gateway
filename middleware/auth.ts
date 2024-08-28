@@ -8,22 +8,22 @@ const secretKey = process.env.SECRET_KEY;
 const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
 
     const cookieToken = req.cookies.token;
-    const authHeader = req.headers.authorization;
-    let headerToken = '';
+    // const authHeader = req.headers.authorization;
+    // let headerToken = '';
 
-    if (authHeader && authHeader.startsWith('Bearer ')) {
-        headerToken = authHeader.split(' ')[1];
-    }
+    // if (authHeader && authHeader.startsWith('Bearer ')) {
+    //     headerToken = authHeader.split(' ')[1];
+    // }
 
-    if (!cookieToken || !headerToken) {
-        console.log('Token missing in cookies or Authorization header');
-        return res.status(401).json({ message: 'Unauthorized: Token not provided' });
-    }
+    // if (!cookieToken || !headerToken) {
+    //     console.log('Token missing in cookies or Authorization header');
+    //     return res.status(401).json({ message: 'Unauthorized: Token not provided' });
+    // }
 
-    if (cookieToken !== headerToken) {
-        console.log('Token mismatch between cookies and Authorization header');
-        return res.status(401).json({ message: 'Unauthorized: Token mismatch' });
-    }
+    // if (cookieToken !== headerToken) {
+    //     console.log('Token mismatch between cookies and Authorization header');
+    //     return res.status(401).json({ message: 'Unauthorized: Token mismatch' });
+    // }
 
     jwt.verify(cookieToken, secretKey!, (err: VerifyErrors | null, decoded: any) => {
         if (err) {

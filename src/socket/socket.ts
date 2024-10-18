@@ -21,18 +21,39 @@ const s3: S3Client = new S3Client({
     region: process.env.BUCKET_REGION
 });
 
+const allowedOrigins = ['https://climbr.site'];
+
 const setupSocket = async (server: HTTPServer): Promise<SocketIOServer> => {
     const io = new SocketIOServer(server, {
+
         cors: {
-            origin: 'https://climbr.site',
-            methods: ['GET', 'POST'],
-            credentials: true
+            origin: function (origin, callback) {
+                if (!origin || allowedOrigins.includes(origin)) {
+                    callback(null, origin);
+                } else {
+                    callback(null, '*');
+                }
+            },
+            credentials: true,  
+            methods: ['GET', 'POST', 'OPTIONS', 'DELETE', 'PUT', 'PATCH'],  
         }
+
+        // cors: {
+        //     origin: 'https://climbr.site',
+        //     methods: ['GET', 'POST'],
+        //     credentials: true
+        // }
+
         // cors: {
         //     origin: 'http://localhost:3000',
         //     methods: ['GET', 'POST']
         // }
+
     });
+
+
+
+    
 
     // const connection = await amqp.connect('amqp://rabbitmq:5672');
     // const channel = await connection.createChannel();

@@ -23,10 +23,26 @@ app.use(cookieParser());
 //   origin: 'http://localhost:3000',
 //   credentials: true
 // }));
+
+const allowedOrigins = ['https://climbr.site'];
+
 app.use(cors({
-  origin: 'https://climbr.site',
-  credentials: true
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, origin);
+    } else {
+      callback(null, '*');
+    }
+  },
+  credentials: true,  
+  methods: ['GET', 'POST', 'OPTIONS', 'DELETE', 'PUT', 'PATCH'],
 }));
+
+
+// app.use(cors({
+//   origin: 'https://climbr.site',
+//   credentials: true
+// }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

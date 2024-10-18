@@ -25,7 +25,6 @@ const allowedOrigins = ['https://climbr.site'];
 
 const setupSocket = async (server: HTTPServer): Promise<SocketIOServer> => {
     const io = new SocketIOServer(server, {
-
         cors: {
             origin: function (origin, callback) {
                 if (!origin || allowedOrigins.includes(origin)) {
